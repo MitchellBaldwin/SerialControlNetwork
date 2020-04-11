@@ -9,7 +9,7 @@
 // The constructor may be called automatically when PCHostSerialConnection is declared?
 // -> Yes, the constructor is called here and the constructor calls the 'begin' base method
 //in PacketSerial
-SerialClient PCHostSerialConnection(115200);
+SerialClient PCHostSerialConnection;
 
 const uint8_t BUILTINLED = 13;
 
@@ -20,42 +20,36 @@ void setup()
 
 	pinMode(BUILTINLED, OUTPUT);
 
-	PCHostSerialConnection.setPacketHandler(&OnUSBPacket);
-	PCHostSerialConnection.begin(115200);
+	PCHostSerialConnection.SetPacketHandler(&OnSerialClientMessage);
+	PCHostSerialConnection.Begin(115200);
 
 }
 
 void loop()
 {
-	//ToggleLED();
-
-	if (PCHostSerialConnection.newCommandReceived)
-	{
-		PCHostSerialConnection.newCommandReceived = false;
-		switch (PCHostSerialConnection.commandReceived)
-		{
-			case 0xF8:
-				ToggleLED();
-				break;
-		
-			default:
-				break;
-		}
-	}
-	
-	PCHostSerialConnection.update();
+	PCHostSerialConnection.Update();
 	delay(100);
 }
 
-void OnUSBPacket(const uint8_t* buffer, size_t size)
+void OnSerialClientMessage(const uint8_t* buffer, size_t size)
 {
-	PCHostSerialConnection.newCommandReceived = true;
-	PCHostSerialConnection.commandReceived = buffer[0];
+	// Call method in SerialClient class to get the command info
+	uint8_t command = PCHostSerialConnection.UnPackCommandMessage(buffer, size);
 
-	for (int i = 0; i < PCHostSerialConnection.PACKET_SIZE; ++i)
+	// May no longer be necessary to use the newCommandReceived flag:
+	PCHostSerialConnection.newCommandReceived = false;
+
+	switch (command)
 	{
-		PCHostSerialConnection.inBuffer[i] = buffer[i];
+	case 0xF8:
+		ToggleLED();
+		break;
+
+	default:
+		break;
 	}
+
+	
 }
 
 void ToggleLED()
