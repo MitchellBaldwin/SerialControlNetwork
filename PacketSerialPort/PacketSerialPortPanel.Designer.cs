@@ -1,4 +1,4 @@
-﻿namespace PacketSerialPort
+﻿namespace SerialControlNetwork
 {
     partial class PacketSerialPortPanel
     {
@@ -29,30 +29,36 @@
         private void InitializeComponent()
         {
             this.SystemPanel = new System.Windows.Forms.Panel();
+            this.InPacketDisplayLabel = new System.Windows.Forms.Label();
+            this.OutPacketDisplayLabel = new System.Windows.Forms.Label();
+            this.InBufferDisplayLabel = new System.Windows.Forms.Label();
+            this.PSPCMessageLabel = new System.Windows.Forms.Label();
             this.ConnectButton = new System.Windows.Forms.Button();
             this.ComPortNamesComboBox = new System.Windows.Forms.ComboBox();
             this.StopBitsDisplayLabel = new System.Windows.Forms.Label();
             this.ComStatusDisplayLabel = new System.Windows.Forms.Label();
             this.BytePositionLabel = new System.Windows.Forms.Label();
-            this.InBufferDisplayLabel = new System.Windows.Forms.Label();
             this.OutBufferDisplayLabel = new System.Windows.Forms.Label();
             this.DataBitsDisplayLabel = new System.Windows.Forms.Label();
             this.ParityDisplayLabel = new System.Windows.Forms.Label();
             this.BaudRateDisplayLabel = new System.Windows.Forms.Label();
             this.PortLabel = new System.Windows.Forms.Label();
-            this.PSPCMessageLabel = new System.Windows.Forms.Label();
+            this.ConnectedDeviceDisplayLabel = new System.Windows.Forms.Label();
             this.SystemPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // SystemPanel
             // 
+            this.SystemPanel.Controls.Add(this.ConnectedDeviceDisplayLabel);
+            this.SystemPanel.Controls.Add(this.InPacketDisplayLabel);
+            this.SystemPanel.Controls.Add(this.OutPacketDisplayLabel);
+            this.SystemPanel.Controls.Add(this.InBufferDisplayLabel);
             this.SystemPanel.Controls.Add(this.PSPCMessageLabel);
             this.SystemPanel.Controls.Add(this.ConnectButton);
             this.SystemPanel.Controls.Add(this.ComPortNamesComboBox);
             this.SystemPanel.Controls.Add(this.StopBitsDisplayLabel);
             this.SystemPanel.Controls.Add(this.ComStatusDisplayLabel);
             this.SystemPanel.Controls.Add(this.BytePositionLabel);
-            this.SystemPanel.Controls.Add(this.InBufferDisplayLabel);
             this.SystemPanel.Controls.Add(this.OutBufferDisplayLabel);
             this.SystemPanel.Controls.Add(this.DataBitsDisplayLabel);
             this.SystemPanel.Controls.Add(this.ParityDisplayLabel);
@@ -61,8 +67,46 @@
             this.SystemPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SystemPanel.Location = new System.Drawing.Point(0, 0);
             this.SystemPanel.Name = "SystemPanel";
-            this.SystemPanel.Size = new System.Drawing.Size(800, 80);
+            this.SystemPanel.Size = new System.Drawing.Size(800, 142);
             this.SystemPanel.TabIndex = 77;
+            // 
+            // InPacketDisplayLabel
+            // 
+            this.InPacketDisplayLabel.AutoSize = true;
+            this.InPacketDisplayLabel.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.InPacketDisplayLabel.Location = new System.Drawing.Point(9, 92);
+            this.InPacketDisplayLabel.Name = "InPacketDisplayLabel";
+            this.InPacketDisplayLabel.Size = new System.Drawing.Size(48, 16);
+            this.InPacketDisplayLabel.TabIndex = 116;
+            this.InPacketDisplayLabel.Text = "PIN: ";
+            // 
+            // OutPacketDisplayLabel
+            // 
+            this.OutPacketDisplayLabel.AutoSize = true;
+            this.OutPacketDisplayLabel.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.OutPacketDisplayLabel.Location = new System.Drawing.Point(9, 76);
+            this.OutPacketDisplayLabel.Name = "OutPacketDisplayLabel";
+            this.OutPacketDisplayLabel.Size = new System.Drawing.Size(56, 16);
+            this.OutPacketDisplayLabel.TabIndex = 115;
+            this.OutPacketDisplayLabel.Text = "POUT: ";
+            // 
+            // InBufferDisplayLabel
+            // 
+            this.InBufferDisplayLabel.AutoSize = true;
+            this.InBufferDisplayLabel.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.InBufferDisplayLabel.Location = new System.Drawing.Point(9, 60);
+            this.InBufferDisplayLabel.Name = "InBufferDisplayLabel";
+            this.InBufferDisplayLabel.Size = new System.Drawing.Size(48, 16);
+            this.InBufferDisplayLabel.TabIndex = 114;
+            this.InBufferDisplayLabel.Text = "BIN: ";
+            // 
+            // PSPCMessageLabel
+            // 
+            this.PSPCMessageLabel.Location = new System.Drawing.Point(458, 9);
+            this.PSPCMessageLabel.Name = "PSPCMessageLabel";
+            this.PSPCMessageLabel.Size = new System.Drawing.Size(200, 13);
+            this.PSPCMessageLabel.TabIndex = 113;
+            this.PSPCMessageLabel.Text = "<PSP Controller message>";
             // 
             // ConnectButton
             // 
@@ -110,19 +154,9 @@
             this.BytePositionLabel.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BytePositionLabel.Location = new System.Drawing.Point(9, 29);
             this.BytePositionLabel.Name = "BytePositionLabel";
-            this.BytePositionLabel.Size = new System.Drawing.Size(424, 16);
+            this.BytePositionLabel.Size = new System.Drawing.Size(432, 16);
             this.BytePositionLabel.TabIndex = 42;
-            this.BytePositionLabel.Text = "POS: 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F";
-            // 
-            // InBufferDisplayLabel
-            // 
-            this.InBufferDisplayLabel.AutoSize = true;
-            this.InBufferDisplayLabel.Font = new System.Drawing.Font("Courier New", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.InBufferDisplayLabel.Location = new System.Drawing.Point(9, 57);
-            this.InBufferDisplayLabel.Name = "InBufferDisplayLabel";
-            this.InBufferDisplayLabel.Size = new System.Drawing.Size(40, 17);
-            this.InBufferDisplayLabel.TabIndex = 41;
-            this.InBufferDisplayLabel.Text = "IN: ";
+            this.BytePositionLabel.Text = "POS:  00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F";
             // 
             // OutBufferDisplayLabel
             // 
@@ -130,9 +164,9 @@
             this.OutBufferDisplayLabel.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.OutBufferDisplayLabel.Location = new System.Drawing.Point(9, 44);
             this.OutBufferDisplayLabel.Name = "OutBufferDisplayLabel";
-            this.OutBufferDisplayLabel.Size = new System.Drawing.Size(48, 16);
+            this.OutBufferDisplayLabel.Size = new System.Drawing.Size(56, 16);
             this.OutBufferDisplayLabel.TabIndex = 40;
-            this.OutBufferDisplayLabel.Text = "OUT: ";
+            this.OutBufferDisplayLabel.Text = "BOUT: ";
             // 
             // DataBitsDisplayLabel
             // 
@@ -170,13 +204,16 @@
             this.PortLabel.TabIndex = 33;
             this.PortLabel.Text = "Port:";
             // 
-            // PSPCMessageLabel
+            // ConnectedDeviceDisplayLabel
             // 
-            this.PSPCMessageLabel.Location = new System.Drawing.Point(458, 9);
-            this.PSPCMessageLabel.Name = "PSPCMessageLabel";
-            this.PSPCMessageLabel.Size = new System.Drawing.Size(200, 13);
-            this.PSPCMessageLabel.TabIndex = 113;
-            this.PSPCMessageLabel.Text = "<PSP Controller message>";
+            this.ConnectedDeviceDisplayLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ConnectedDeviceDisplayLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ConnectedDeviceDisplayLabel.Location = new System.Drawing.Point(693, 32);
+            this.ConnectedDeviceDisplayLabel.Name = "ConnectedDeviceDisplayLabel";
+            this.ConnectedDeviceDisplayLabel.Size = new System.Drawing.Size(104, 28);
+            this.ConnectedDeviceDisplayLabel.TabIndex = 117;
+            this.ConnectedDeviceDisplayLabel.Text = "<Connected Device>";
+            this.ConnectedDeviceDisplayLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // PacketSerialPortPanel
             // 
@@ -184,7 +221,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.SystemPanel);
             this.Name = "PacketSerialPortPanel";
-            this.Size = new System.Drawing.Size(800, 80);
+            this.Size = new System.Drawing.Size(800, 142);
             this.SystemPanel.ResumeLayout(false);
             this.SystemPanel.PerformLayout();
             this.ResumeLayout(false);
@@ -199,12 +236,15 @@
         private System.Windows.Forms.Label StopBitsDisplayLabel;
         private System.Windows.Forms.Label ComStatusDisplayLabel;
         private System.Windows.Forms.Label BytePositionLabel;
-        private System.Windows.Forms.Label InBufferDisplayLabel;
         private System.Windows.Forms.Label OutBufferDisplayLabel;
         private System.Windows.Forms.Label DataBitsDisplayLabel;
         private System.Windows.Forms.Label ParityDisplayLabel;
         private System.Windows.Forms.Label BaudRateDisplayLabel;
         private System.Windows.Forms.Label PortLabel;
         private System.Windows.Forms.Label PSPCMessageLabel;
+        private System.Windows.Forms.Label InPacketDisplayLabel;
+        private System.Windows.Forms.Label OutPacketDisplayLabel;
+        private System.Windows.Forms.Label InBufferDisplayLabel;
+        private System.Windows.Forms.Label ConnectedDeviceDisplayLabel;
     }
 }

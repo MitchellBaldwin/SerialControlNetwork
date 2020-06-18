@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PacketSerialPort", "PacketS
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RemoteSerialServer", "RemoteSerialServer\RemoteSerialServer.vcxproj", "{C5F80730-F44F-4478-BDAE-6634EFC2CA88}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MFCD4Duino", "MFCD4Duino\MFCD4Duino.vcxproj", "{4D9F1F6D-0B87-4A10-867E-851884D2974B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SFuOLEDDemo", "SFuOLEDDemo\SFuOLEDDemo.vcxproj", "{0D58269E-0BE5-443E-898C-48A02EB4D342}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,18 @@ Global
 		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|Any CPU.ActiveCfg = Release|Win32
 		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|x86.ActiveCfg = Release|Win32
 		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|x86.Build.0 = Release|Win32
+		{4D9F1F6D-0B87-4A10-867E-851884D2974B}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{4D9F1F6D-0B87-4A10-867E-851884D2974B}.Debug|x86.ActiveCfg = Debug|Win32
+		{4D9F1F6D-0B87-4A10-867E-851884D2974B}.Debug|x86.Build.0 = Debug|Win32
+		{4D9F1F6D-0B87-4A10-867E-851884D2974B}.Release|Any CPU.ActiveCfg = Release|Win32
+		{4D9F1F6D-0B87-4A10-867E-851884D2974B}.Release|x86.ActiveCfg = Release|Win32
+		{4D9F1F6D-0B87-4A10-867E-851884D2974B}.Release|x86.Build.0 = Release|Win32
+		{0D58269E-0BE5-443E-898C-48A02EB4D342}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{0D58269E-0BE5-443E-898C-48A02EB4D342}.Debug|x86.ActiveCfg = Debug|Win32
+		{0D58269E-0BE5-443E-898C-48A02EB4D342}.Debug|x86.Build.0 = Debug|Win32
+		{0D58269E-0BE5-443E-898C-48A02EB4D342}.Release|Any CPU.ActiveCfg = Release|Win32
+		{0D58269E-0BE5-443E-898C-48A02EB4D342}.Release|x86.ActiveCfg = Release|Win32
+		{0D58269E-0BE5-443E-898C-48A02EB4D342}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -15,21 +15,46 @@ namespace SerialControlNetwork
         private byte[] PacketBuffer { get; set; }
         private byte[] PacketPayloadBuffer { get; set; }
 
+        public byte[] GetComBuffer()
+        {
+            return ComBuffer;
+        }
+        public byte[] GetEncodedPacketBuffer()
+        {
+            return EncodedPacketBuffer;
+        }
+        public byte[] GetPacketBuffer()
+        {
+            return PacketBuffer;
+        }
+        public byte[] GetPacketPayloadBuffer()
+        {
+            return PacketPayloadBuffer;
+        }
+
         public int ComBufferSize { get => ComBuffer.Length; }
         public int EncodedPacketSize { get => EncodedPacketBuffer.Length; }
         public int PacketSize { get => PacketBuffer.Length; }
         public int PacketPayloadSize { get => PacketPayloadBuffer.Length; }
 
+        private System.Windows.Forms.Control ParentControl { get; set; }
+
         public SerialPort RemoteSystemComPort { get; set; }
 
-        public PacketSerialPortController(int comBufferSize = 0x10)
+        public delegate void UpdateParentsHandler(byte[] buffer);
+        public UpdateParentsHandler UpdateParents { get; set; }
+
+        public PacketSerialPortController(System.Windows.Forms.Control parentControl, int comBufferSize = 0x10)
         {
+            ParentControl = parentControl;
             RemoteSystemComPort = new SerialPort();
             ComBuffer = new byte[comBufferSize];
             EncodedPacketBuffer = new byte[ComBuffer.Length - 1];
             PacketBuffer = new byte[EncodedPacketBuffer.Length - 1];
-            PacketPayloadBuffer = new byte[PacketBuffer.Length - 1];
-            
+            PacketPayloadBuffer = new byte[PacketBuffer.Length - 2];
+
+            RemoteSystemComPort.DataReceived += new SerialDataReceivedEventHandler(RemoteSystemComPort_DataReceived);
+
         }
 
         public string[] GetAvailableComPortNames()
@@ -64,16 +89,22 @@ namespace SerialControlNetwork
         // Helper function to format and COBS encode the ComBuffer with a command, associated data packet
         //(contained in PacketPayloadPacket) and checksum, then finally send the message over the 
         //RemoteSystemComPort
-        public void SendCommandMessage(byte command, out string returnStatusMessage)
+        public void SendCommandMessage(byte command, byte[] buffer, out string returnStatusMessage)
         {
-            byte checkSum = 0;
-            //returnStatusMessage = "";
 
             // Build the command message:
 
-            for (int i = 0; i < PacketSize; ++i)
+            for (int i = 0; i < PacketPayloadSize; ++i)
             {
-                PacketBuffer[i] = 0;
+                if (i < buffer.Length)
+                {
+                    PacketPayloadBuffer[i] = buffer[i];
+                }
+                else
+                {
+                    PacketPayloadBuffer[i] = 0x00;
+                }
+                
             }
 
             PacketBuffer[0] = command;
@@ -82,7 +113,7 @@ namespace SerialControlNetwork
                 PacketBuffer[1 + i] = PacketPayloadBuffer[i];
             }
 
-            checkSum = 0x00;
+            byte checkSum = 0x00;
             for (int i = 0; i < PacketSize - 1; ++i)
             {
                 checkSum += PacketBuffer[i];
@@ -103,7 +134,7 @@ namespace SerialControlNetwork
             {
                 RemoteSystemComPort.Write(ComBuffer, 0, ComBufferSize);
                 returnStatusMessage = $"{PacketBuffer[0].ToString("X2")} sent";
-
+                Console.WriteLine($"{PacketBuffer[0].ToString("X2")} sent");
             }
             catch (InvalidOperationException ioe)
             {
@@ -111,6 +142,48 @@ namespace SerialControlNetwork
             }
 
         }
+
+        private void RemoteSystemComPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            string PSPCDRReport;
+
+            if (RemoteSystemComPort.BytesToRead < ComBufferSize)
+            {
+                return;
+            }
+            try
+            {
+                int bytesReadCount = RemoteSystemComPort.Read(ComBuffer, 0, ComBufferSize);
+                PSPCDRReport = $"Received {bytesReadCount} bytes";
+                if (ComBuffer[ComBufferSize - 1] != 0x00)
+                {
+                    PSPCDRReport = $"Serial port framing error";
+                    return;
+                }
+                for (int i = 0; i < EncodedPacketSize; ++i)
+                {
+                    EncodedPacketBuffer[i] = ComBuffer[i];
+                }
+                PacketBuffer = COBS.COBSCodec.decode(EncodedPacketBuffer);
+                
+                // Test checksum
+
+                // Determine message type and invoke handlers accordingly
+
+                if (PacketBuffer[0] == 0x10)
+                {
+                    PSPCDRReport = $"Received a status packet";
+                }
+
+                // Pass received data on to intended recipient(s):
+                ParentControl.Invoke(UpdateParents, ComBuffer);
+            }
+            catch
+            {
+
+            }
+        }
+
 
     }
 }

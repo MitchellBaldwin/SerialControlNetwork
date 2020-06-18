@@ -1,14 +1,33 @@
-﻿using System.Text;
+﻿using System.ComponentModel;
+using System.Text;
 using System.Windows.Forms;
 using SerialControlNetwork;
 
-namespace PacketSerialPort
+namespace SerialControlNetwork
 {
     public partial class PacketSerialPortPanel : UserControl
     {
 
         //public PacketSerialPortController PSPC { get; set; }
         public PacketSerialPortController PSPC;
+        private string connectedDeviceName = "<Connected Device>";
+        public string GetConnectedDeviceName()
+        {
+            return connectedDeviceName;
+        }
+        public void SetConnectedDeviceName(string value)
+        {
+            connectedDeviceName = value;
+            ConnectedDeviceDisplayLabel.Text = connectedDeviceName;
+        }
+
+        //// Use UserControl.Parent instead?
+        //private System.Windows.Forms.Control ParentControl { get; set; }
+
+        // Delegate to update parent displays when new data is received (from another thread, such as SerialPort.OnDataReceived):
+        public delegate void UpdateParentsHandler(byte[] buffer);
+        public UpdateParentsHandler UpdateParents { get; set; }
+
 
         public PacketSerialPortPanel()
         {
@@ -20,9 +39,9 @@ namespace PacketSerialPort
             ////SerialPort.GetPortNames() method
             //// If PSPC is left as a field, then VS does NOT create an instance of PacketSerialPortController
             
-            //ComPortNamesComboBox.Items.AddRange(System.IO.Ports.SerialPort.GetPortNames());
+            PSPC = new PacketSerialPortController(this, 0x20);
+            PSPC.UpdateParents += new PacketSerialPortController.UpdateParentsHandler(UpdateBufferDisplays);
 
-            PSPC = new PacketSerialPortController(0x10);
             PSPCMessageLabel.Text = PSPC.ToString();
             ComPortNamesComboBox.Items.AddRange(PSPC.GetAvailableComPortNames());
 
@@ -33,9 +52,9 @@ namespace PacketSerialPort
                 ComPortNamesComboBox.Text = ComPortNamesComboBox.Items[0].ToString();
             }
 
-            InitializeSerialPort(ComPortNamesComboBox.Text);
+            InitializeSerialPort(ComPortNamesComboBox.Text, GetConnectedDeviceName());
 
-            StringBuilder sb = new StringBuilder("POS:");
+            StringBuilder sb = new StringBuilder("POS :");
             for (int i=0; i < PSPC.ComBufferSize; ++i)
             {
                 sb.Append($" { i.ToString("X2") }");
@@ -44,8 +63,10 @@ namespace PacketSerialPort
 
         }
 
-        private void InitializeSerialPort(string comPortName)
+        private void InitializeSerialPort(string comPortName, string connectedDeviceName)
         {
+            ConnectedDeviceDisplayLabel.Text = connectedDeviceName;
+
             PSPC.RemoteSystemComPort.PortName = comPortName;
             PSPC.RemoteSystemComPort.BaudRate = int.Parse(BaudRateDisplayLabel.Text);
             PSPC.RemoteSystemComPort.DataBits = int.Parse(DataBitsDisplayLabel.Text);
@@ -58,7 +79,7 @@ namespace PacketSerialPort
 
         private void ComPortNamesComboBox_SelectedIndexChanged(object sender, System.EventArgs e)
         {
-            InitializeSerialPort(ComPortNamesComboBox.Text);
+            InitializeSerialPort(ComPortNamesComboBox.Text, GetConnectedDeviceName());
         }
 
         private void ConnectButton_Click(object sender, System.EventArgs e)
@@ -80,10 +101,74 @@ namespace PacketSerialPort
 
         }
 
-        public void SendCommandMessage(byte command)
+        public void SendCommandMessage(byte command, byte[] buffer)
         {
-            PSPC.SendCommandMessage(command, out string statusMessage);
+            PSPC.SendCommandMessage(command, buffer, out string statusMessage);
+
             PSPCMessageLabel.Text = statusMessage;
+
+            byte[] comBuffer = PSPC.GetComBuffer();
+
+            // Display the contents of the encoded outgoing buffer:
+            StringBuilder sb = new StringBuilder("BOUT:");
+            for (int i = 0; i < PSPC.ComBufferSize; ++i)
+            {
+                sb.Append($" { comBuffer[i].ToString("X2") }");
+            }
+            OutBufferDisplayLabel.Text = sb.ToString();
+
+            byte[] packetBuffer = PSPC.GetPacketBuffer();
+
+            sb.Clear();
+            sb.Append("POUT:");
+            for (int i = 0; i < PSPC.PacketSize; ++i)
+            {
+                sb.Append($" { packetBuffer[i].ToString("X2") }");
+            }
+            OutPacketDisplayLabel.Text = sb.ToString();
+
+        }
+
+        public void UpdateBufferDisplays(byte[] buffer)
+        {
+            // Display the contents of the incomming encoded buffer:
+            StringBuilder sb = new StringBuilder("BIN :");
+            for (int i = 0; i < PSPC.ComBufferSize; ++i)
+            {
+                sb.Append($" { buffer[i].ToString("X2") }");
+            }
+            InBufferDisplayLabel.Text = sb.ToString();
+            System.Console.WriteLine($"Packet received");
+
+            byte[] packetBuffer = PSPC.GetPacketBuffer();
+
+            sb.Clear();
+            sb.Append("PIN :");
+            for (int i = 0; i < PSPC.PacketSize; ++i)
+            {
+                sb.Append($" { packetBuffer[i].ToString("X2") }");
+            }
+            InPacketDisplayLabel.Text = sb.ToString();
+
+            // Casscade to the Parent of this Control:
+            Parent.Invoke(UpdateParents, packetBuffer);
+        }
+
+        public string GetComPortName()
+        {
+            return PSPC.RemoteSystemComPort.PortName;
+        }
+
+        public void SetComPortName(string comPortName)
+        {
+            ComPortNamesComboBox.Text = "";
+            foreach (string portName in ComPortNamesComboBox.Items)
+            {
+                if (portName == comPortName)
+                {
+                    ComPortNamesComboBox.Text = comPortName;
+                }
+            }
         }
     }
 }
