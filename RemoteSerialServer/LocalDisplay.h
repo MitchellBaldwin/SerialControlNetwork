@@ -1,5 +1,8 @@
-/*	LocalDisplayClass - Class implementing handlers for a local display
+/*	LocalDisplayClass - Class implementing handlers for a local display associated with and likely
+*	located with the MCU controlling communications with an embedded module
 *
+*	Supported displays include:
+*		Sparkfun Micro OLED Breakout (Qwiic) LCD-14532
 *
 *	Mitchell Baldwin copyright 2020
 *

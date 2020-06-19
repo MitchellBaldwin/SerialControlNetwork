@@ -1,5 +1,9 @@
-/*	ArduinoControllerBaseClass - Class implementing commands from remote controller
+/*	ArduinoControllerBaseClass - Base class for implementing commands on the local embedded system received
+*	from a remote controller system through a UART serial communication link (e.g., TTL UART, RS232,
+*	USB Serial, Bluetooth Virtual Serial Port (SPP), etc.)
 *
+*	Base class for MRS Master Communications Controller (MRSMCC) and other embedded software modules
+*	that rely on UART serial communication links
 *
 *	Mitchell Baldwin copyright 2020
 *
@@ -16,6 +20,8 @@
 #else
 	#include "WProgram.h"
 #endif
+
+#include "SerialClient.h"
 
 class ArduinoControllerBaseClass
 {

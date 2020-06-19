@@ -1,5 +1,7 @@
 /*	ArduinoControllerBaseClass - Class implementing commands from remote controller
 *
+*	Base class for MRS Master Communications Controller (MRSMCC) and other embedded software modules
+*	that rely on UART serial communication links
 *
 *	Mitchell Baldwin copyright 2020
 *
@@ -8,7 +10,7 @@
 #include "ArduinoControllerBase.h"
 #include "MRSCommands.h"
 #include "MRSMessageTypes.h"
-#include "SerialClient.h"
+//#include "SerialClient.h"
 #include "LocalDisplay.h"
 
 ArduinoControllerBaseClass::ArduinoControllerBaseClass()
@@ -28,11 +30,11 @@ void ArduinoControllerBaseClass::ExecuteCommand(uint8_t command)
 {
 	switch (command)
 	{
-	case MRSCommandCodes.ToggleBuiltInLED:
+	case MRSCommands::ToggleBuiltInLED:
 		ToggleLED();
 		break;
 
-	case MRSCommandCodes.TestPacketTransfer:
+	case MRSCommands::TestPacketTransfer:
 		ClientConnection.outPacket[0] = MRSMessageTypes.MRSStatusPacket;
 		ClientConnection.SendPacket();
 		break;
@@ -47,11 +49,11 @@ void ArduinoControllerBaseClass::ExecuteCommand(uint8_t command, uint8_t *comman
 {
 	switch (command)
 	{
-	case MRSCommandCodes.ToggleBuiltInLED:
+	case MRSCommands::ToggleBuiltInLED:
 		ToggleLED();
 		break;
 
-	case MRSCommandCodes.TestPacketTransfer:
+	case MRSCommands::TestPacketTransfer:
 		// Test receipt of command packet payload data by returning it the client controller
 		//as a status data packet:
 		EchoCommandMessage(command, commandPayload);
