@@ -44,7 +44,7 @@ protected:
 
 };
 
-extern ArduinoControllerBaseClass ArduinoControllerBase;
+//extern ArduinoControllerBaseClass ArduinoControllerBase;
 
 #endif
 

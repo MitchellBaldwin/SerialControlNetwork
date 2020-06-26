@@ -12,6 +12,9 @@ the main (INO) programs implementing the MRSMCC, MRSRC, etc.
 //#include "SerialClient.h"
 #include "ArduinoControllerBase.h"
 
+ArduinoControllerBaseClass ArduinoControllerBase;
+
+
 void setup()
 {
 	ClientConnection.SetPacketHandler(&OnSerialClientMessage);

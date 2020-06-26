@@ -148,5 +148,5 @@ void ArduinoControllerBaseClass::ToggleLED()
 	}
 }
 
-ArduinoControllerBaseClass ArduinoControllerBase;
+//ArduinoControllerBaseClass ArduinoControllerBase;
 
