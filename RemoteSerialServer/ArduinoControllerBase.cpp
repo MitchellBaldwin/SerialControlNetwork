@@ -8,9 +8,9 @@
 */
 
 #include "ArduinoControllerBase.h"
-#include "MRSCommands.h"
+#include "MRSCommandTypes.h"
 #include "MRSMessageTypes.h"
-//#include "SerialClient.h"
+
 #include "LocalDisplay.h"
 
 ArduinoControllerBaseClass::ArduinoControllerBaseClass()
@@ -18,11 +18,33 @@ ArduinoControllerBaseClass::ArduinoControllerBaseClass()
 	
 }
 
-void ArduinoControllerBaseClass::Init()
+void ArduinoControllerBaseClass::Init(PacketSerial::PacketHandlerFunction OnSerialClientMessage)
 {
 	pinMode(BUILTINLED, OUTPUT);
 
+	ClientConnection.SetPacketHandler(OnSerialClientMessage);
+	ClientConnection.Begin(115200);
+
 	LocalDisplay.init();
+
+}
+
+void ArduinoControllerBaseClass::Update()
+{
+	ClientConnection.Update();
+}
+
+void ArduinoControllerBaseClass::ProcessMessages(const uint8_t* buffer, size_t size)
+{
+	uint8_t* commandPayload;
+
+	// Call method in SerialClient class to get the command info:
+	uint8_t command = ClientConnection.UnPackCommandMessage(buffer, size);
+	commandPayload = ClientConnection.GetInPacketPayload();
+
+	// Execute received command through the remote MRS communications controller:
+	//MRSRemoteComController.ExecuteCommand(command);
+	ExecuteCommand(command, commandPayload);
 
 }
 
@@ -30,12 +52,12 @@ void ArduinoControllerBaseClass::ExecuteCommand(uint8_t command)
 {
 	switch (command)
 	{
-	case MRSCommands::ToggleBuiltInLED:
+	case MRSCommandTypes::ToggleBuiltInLED:
 		ToggleLED();
 		break;
 
-	case MRSCommands::TestPacketTransfer:
-		ClientConnection.outPacket[0] = MRSMessageTypes.MRSStatusPacket;
+	case MRSCommandTypes::TestPacketTransfer:
+		ClientConnection.outPacket[0] = MRSMessageTypes::MRSStatusPacket;
 		ClientConnection.SendPacket();
 		break;
 
@@ -49,30 +71,30 @@ void ArduinoControllerBaseClass::ExecuteCommand(uint8_t command, uint8_t *comman
 {
 	switch (command)
 	{
-	case MRSCommands::ToggleBuiltInLED:
+	case MRSCommandTypes::ToggleBuiltInLED:
 		ToggleLED();
 		break;
 
-	case MRSCommands::TestPacketTransfer:
+	case MRSCommandTypes::TestPacketTransfer:
 		// Test receipt of command packet payload data by returning it the client controller
 		//as a status data packet:
 		EchoCommandMessage(command, commandPayload);
 		break;
 
-	case MRSCommands::GetTestTextMessage:
+	case MRSCommandTypes::GetTestTextMessage:
 		// Return a text message to test caller's ability to interpret and display text messages:
 		SendTextMessage("This is a test...");
 		break;
 
-	case MRSMessageTypesClass::MRSTextMessage:
+	case MRSMessageTypes::MRSTextMessage:
 	{
 		// Display the incoming text message locally (and/or log it):
 		String msg = String((char*)commandPayload);
-		LocalDisplay.Print(msg);
+		LocalDisplay.WriteLine(msg);
 	}
 		break;
 
-	case MRSCommands::TestLocalDisplay:
+	case MRSCommandTypes::TestLocalDisplay:
 		// Run demo / test of local display hardware:
 		if (TestLocalDisplay())
 		{
@@ -102,7 +124,7 @@ void ArduinoControllerBaseClass::EchoCommandMessage(uint8_t command, uint8_t *co
 
 void ArduinoControllerBaseClass::SendTextMessage(String msg) 
 {
-	ClientConnection.outPacket[0] = MRSMessageTypesClass::MRSTextMessage;
+	ClientConnection.outPacket[0] = MRSMessageTypes::MRSTextMessage;
 	for (int i = 0; i < ClientConnection.PACKET_PAYLOAD_SIZE; ++i) 
 	{
 		if (i < msg.length())
@@ -131,7 +153,7 @@ bool ArduinoControllerBaseClass::TestLocalDisplay()
 
 void ArduinoControllerBaseClass::GetStatusReport()
 {
-	ClientConnection.outPacket[0] = MRSMessageTypes.MRSStatusPacket;
+	ClientConnection.outPacket[0] = MRSMessageTypes::MRSStatusPacket;
 
 }
 

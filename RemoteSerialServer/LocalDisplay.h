@@ -43,7 +43,8 @@ class LocalDisplayClass
 
 	bool RunFont0Demo();
 
-	void Print(String);
+	void Write(String);
+	void WriteLine(String);
 
 };
 

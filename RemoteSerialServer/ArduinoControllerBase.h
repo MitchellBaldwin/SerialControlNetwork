@@ -29,18 +29,20 @@ private:
 	const uint8_t BUILTINLED = 13;
 	
 	void EchoCommandMessage(uint8_t, uint8_t*);
+	void ExecuteCommand(uint8_t);
+	void ExecuteCommand(uint8_t, uint8_t*);
 	void SendTextMessage(String);
 	bool TestLocalDisplay();
+	void ToggleLED();
 
 protected:
 	void GetStatusReport();
 
  public:
 	ArduinoControllerBaseClass();
-	void Init();
-	void ExecuteCommand(uint8_t);
-	void ExecuteCommand(uint8_t, uint8_t*);
-	void ToggleLED();
+	void Init(PacketSerial::PacketHandlerFunction);
+	void Update();
+	void ProcessMessages(const uint8_t*, size_t);
 
 };
 

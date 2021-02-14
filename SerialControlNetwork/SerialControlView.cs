@@ -56,6 +56,7 @@ namespace SerialControlNetwork
             string testMessage = "Test MSG";
             byte[] dummy = ASCIIEncoding.ASCII.GetBytes(testMessage);
             MRSPSP.SendCommandMessage((byte)MRSMessageType.MRSTextMessage, dummy);
+            System.Threading.Thread.Sleep(500);
             MRSPSP.SendCommandMessage((byte)MRSMessageType.GetTestTextMessage, dummy);
         }
 

@@ -8,8 +8,6 @@ the main (INO) programs implementing the MRSMCC, MRSRC, etc.
 
 */
 
-//#include "MRSMessageTypes.h"
-//#include "SerialClient.h"
 #include "ArduinoControllerBase.h"
 
 ArduinoControllerBaseClass ArduinoControllerBase;
@@ -17,30 +15,17 @@ ArduinoControllerBaseClass ArduinoControllerBase;
 
 void setup()
 {
-	ClientConnection.SetPacketHandler(&OnSerialClientMessage);
-	ClientConnection.Begin(115200);
-
-	ArduinoControllerBase.Init();
-
+	ArduinoControllerBase.Init(&OnSerialClientMessage);
 }
 
 void loop()
 {
-	ClientConnection.Update();
+	ArduinoControllerBase.Update();
 	delay(10);
 }
 
 void OnSerialClientMessage(const uint8_t* buffer, size_t size)
 {
-	uint8_t* commandPayload;
-
-	// Call method in SerialClient class to get the command info:
-	uint8_t command = ClientConnection.UnPackCommandMessage(buffer, size);
-	commandPayload = ClientConnection.GetInPacketPayload();
-	
-	// Execute received command through the remote MRS communications controller:
-	//MRSRemoteComController.ExecuteCommand(command);
-	ArduinoControllerBase.ExecuteCommand(command, commandPayload);
-
+	ArduinoControllerBase.ProcessMessages(buffer, size);
 }
 

@@ -27,13 +27,13 @@
     <ClInclude Include="ArduinoControllerBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MRSCommands.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MRSMessageTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LocalDisplay.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MRSCommandTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -42,12 +42,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ArduinoControllerBase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MRSCommands.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MRSMessageTypes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LocalDisplay.cpp">

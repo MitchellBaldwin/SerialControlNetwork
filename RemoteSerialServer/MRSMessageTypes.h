@@ -17,18 +17,18 @@
 	#include "WProgram.h"
 #endif
 
-class MRSMessageTypesClass
+class MRSMessageTypes
 {
- protected:
+	private:
 
+	protected:
 
- public:
-	//void init();
-	 static const uint8_t MRSTextMessage = 0x0F;
-	 static const uint8_t MRSStatusPacket = 0x10;
+	 public:
+
+		 static const uint8_t MRSTextMessage = 0x0F;
+		 static const uint8_t MRSStatusPacket = 0x10;
+
 };
-
-extern MRSMessageTypesClass MRSMessageTypes;
 
 #endif
 

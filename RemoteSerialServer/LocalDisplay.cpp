@@ -24,6 +24,8 @@ void LocalDisplayClass::init()
 
 bool LocalDisplayClass::RunFont0Demo()
 {
+	uint8_t saveFontType = oled.getFontType();
+
 	// Demonstrate font 0. 5x8 font
 	oled.clear(PAGE);     // Clear the screen
 	oled.setFontType(0);  // Set font to type 0
@@ -48,15 +50,25 @@ bool LocalDisplayClass::RunFont0Demo()
 		}
 	}
 	oled.clear(PAGE);
-	oled.setFontType(0);
-	oled.setCursor(0, 0); 
-	oled.write(248);			// degree symbol
+	//oled.setFontType(0);
+	//oled.setCursor(0, 0); 
+	//oled.write(248);			// degree symbol
+	//oled.display();
+
+	oled.setFontType(saveFontType);
+	oled.setCursor(0,0);
 	oled.display();
 
 	return true;
 }
 
-void LocalDisplayClass::Print(String msg)
+void LocalDisplayClass::Write(String msg)
+{
+	oled.print(msg);
+	oled.display();
+}
+
+void LocalDisplayClass::WriteLine(String msg)
 {
 	oled.println(msg);
 	oled.display();
