@@ -8,24 +8,30 @@ the main (INO) programs implementing the MRSMCC, MRSRC, etc.
 
 */
 
-#include "ArduinoControllerBase.h"
+#include "ArdumotoController.h"
+//#include "ArduinoControllerBase.h"
 
-ArduinoControllerBaseClass ArduinoControllerBase;
+//ArduinoControllerBaseClass ArduinoControllerBase;
+ArdumotoControllerClass ArdumotoController;
 
 
 void setup()
 {
-	ArduinoControllerBase.Init(&OnSerialClientMessage);
+	//ArduinoControllerBase.Init(&OnSerialClientMessage);
+	ArdumotoController.Init(&OnSerialClientMessage);
+	ArdumotoController.TestMotors();
 }
 
 void loop()
 {
-	ArduinoControllerBase.Update();
+	//ArduinoControllerBase.Update();
+	ArdumotoController.Update();
 	delay(10);
 }
 
 void OnSerialClientMessage(const uint8_t* buffer, size_t size)
 {
-	ArduinoControllerBase.ProcessMessages(buffer, size);
+	//ArduinoControllerBase.ProcessMessages(buffer, size);
+	ArdumotoController.ProcessMessages(buffer, size);
 }
 

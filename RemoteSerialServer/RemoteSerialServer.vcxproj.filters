@@ -36,6 +36,9 @@
     <ClInclude Include="MRSCommandTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ArdumotoController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SerialClient.cpp">
@@ -45,6 +48,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LocalDisplay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ArdumotoController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
