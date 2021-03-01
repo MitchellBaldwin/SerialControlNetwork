@@ -1,4 +1,4 @@
-/*	ArduinoControllerBaseClass - Class implementing commands from remote controller
+/*	ArduinoControllerBaseClass - Base class for classes that handle receipt, unpacking and handling commands from remote controller
 *
 *	Base class for MRS Master Communications Controller (MRSMCC) and other embedded software modules
 *	that rely on UART serial communication links
@@ -11,7 +11,6 @@
 #include "MRSCommandTypes.h"
 #include "MRSMessageTypes.h"
 
-#include "LocalDisplay.h"
 
 ArduinoControllerBaseClass::ArduinoControllerBaseClass()
 {
@@ -20,18 +19,17 @@ ArduinoControllerBaseClass::ArduinoControllerBaseClass()
 
 void ArduinoControllerBaseClass::Init(PacketSerial::PacketHandlerFunction OnSerialClientMessage)
 {
-	pinMode(BUILTINLED, OUTPUT);
+	pinMode(LED_BUILTIN, OUTPUT);
 
 	ClientConnection.SetPacketHandler(OnSerialClientMessage);
 	ClientConnection.Begin(115200);
-
-	LocalDisplay.init();
 
 }
 
 void ArduinoControllerBaseClass::Update()
 {
 	ClientConnection.Update();
+
 }
 
 void ArduinoControllerBaseClass::ProcessMessages(const uint8_t* buffer, size_t size)
@@ -90,7 +88,7 @@ void ArduinoControllerBaseClass::ExecuteCommand(uint8_t command, uint8_t *comman
 	{
 		// Display the incoming text message locally (and/or log it):
 		String msg = String((char*)commandPayload);
-		LocalDisplay.WriteLine(msg);
+		//LocalDisplay.WriteLine(msg);
 	}
 		break;
 
@@ -119,6 +117,7 @@ void ArduinoControllerBaseClass::EchoCommandMessage(uint8_t command, uint8_t *co
 	{
 		ClientConnection.outPacketPayload[i] = commandPayload[i];
 	}
+	//delay(100);
 	ClientConnection.SendPacket();
 }
 
@@ -141,14 +140,15 @@ void ArduinoControllerBaseClass::SendTextMessage(String msg)
 
 bool ArduinoControllerBaseClass::TestLocalDisplay()
 {
-	if (LocalDisplay.RunFont0Demo())
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	return true;
+	//if (LocalDisplay.RunFont0Demo())
+	//{
+	//	return true;
+	//}
+	//else
+	//{
+	//	return false;
+	//}
 }
 
 void ArduinoControllerBaseClass::GetStatusReport()
@@ -160,13 +160,13 @@ void ArduinoControllerBaseClass::GetStatusReport()
 void ArduinoControllerBaseClass::ToggleLED()
 {
 	// DEBUG: Toggle system LED to verify receipt of 0xF0 command message
-	if (digitalRead(BUILTINLED))
+	if (digitalRead(LED_BUILTIN))
 	{
-		digitalWrite(BUILTINLED, 0);
+		digitalWrite(LED_BUILTIN, 0);
 	}
 	else
 	{
-		digitalWrite(BUILTINLED, 1);
+		digitalWrite(LED_BUILTIN, 1);
 	}
 }
 

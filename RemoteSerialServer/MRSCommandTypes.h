@@ -28,5 +28,6 @@ class MRSCommandTypes
 		static const uint8_t TestPacketTransfer = 0xF9;
 		static const uint8_t GetTestTextMessage = 0xFA;
 		static const uint8_t TestLocalDisplay = 0xFB;
+		static const uint8_t TestMotors = 0xFC;
 
 };

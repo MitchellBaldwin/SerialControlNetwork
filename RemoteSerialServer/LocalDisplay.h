@@ -41,6 +41,8 @@ class LocalDisplayClass
  public:
 	void init();
 
+	void ClearPage();
+
 	bool RunFont0Demo();
 
 	void Write(String);

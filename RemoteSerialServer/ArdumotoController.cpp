@@ -1,17 +1,18 @@
-// 
-// 
-// 
+/*	ArdumotorControllerClass - Implementation of ArduinoControllerBase
+*
+*	Base class for MRS Master Communications Controller (MRSMCC) and other embedded software modules
+*	that rely on UART serial communication links
+*
+*	Mitchell Baldwin copyright 2021
+*
+*/
 
 #include "ArdumotoController.h"
+#include "MRSCommandTypes.h"
+#include "MRSMessageTypes.h"
 
 #define FORWARD	0
 #define REVERSE 1
-
-//#define LEFT_MOTOR 0
-//#define RIGHT_MOTOR	1
-
-//const byte LEFT_MOTOR = 0;
-//const byte RIGHT_MOTOR = 1;
 
 constexpr auto LeftMotor = 0;
 constexpr auto RightMotor = 1;
@@ -23,14 +24,22 @@ const byte RMPWMPin = 11;
 
 constexpr byte VMotorPin = A0;
 
-void ArdumotoControllerClass::init(PacketSerial::PacketHandlerFunction OnSerialClientMessage)
+void ArdumotoController::Init(PacketSerial::PacketHandlerFunction OnSerialClientMessage)
 {
 	ArduinoControllerBaseClass::Init(OnSerialClientMessage);
 	SetupArdumotoBoard();
 
+	Wire.begin();
+
+	delay(100);
+	oled.begin();    // Initialize the OLED
+	oled.clear(PAGE); // Clear the display's internal memory
+	//oled.display();  // Display what's in the buffer (splashscreen)
+	TestDisplay();
+
 }
 
-void ArdumotoControllerClass::TestMotors()
+void ArdumotoController::TestMotors()
 {
 	SetMotor(LeftMotor, FORWARD, 127);
 	delay(2000);
@@ -50,17 +59,81 @@ void ArdumotoControllerClass::TestMotors()
 	//delay(500);
 }
 
-void ArdumotoControllerClass::ExecuteCommand(uint8_t)
+void ArdumotoController::Update()
+{
+	ArduinoControllerBaseClass::Update();
+
+	//oled.clear(PAGE);
+	// Read and display battery supply voltage
+	uint16_t VBat5Raw = analogRead(VMotorPin);
+	oled.setCursor(0, 0);
+	oled.print("VBat5: " + String(VBat5Raw));
+	oled.display();
+
+}
+
+bool ArdumotoController::TestDisplay()
+{
+	uint8_t fontHeight = oled.getFontHeight();
+	oled.setCursor(0, 10);
+	oled.print("Font h: " + String(fontHeight));
+	oled.display();
+
+	return true;
+}
+
+void ArdumotoController::ExecuteCommand(uint8_t)
 {
 	
 }
 
-void ArdumotoControllerClass::ExecuteCommand(uint8_t command, uint8_t *commandPayload) //: EcecuteCommand(command, commandPayload)
+void ArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload) //: EcecuteCommand(command, commandPayload)
 {
-	ArduinoControllerBaseClass::ExecuteCommand(command, commandPayload);
+	bool commandHandled = false;
+	
+	switch (command)
+	{
+		case MRSMessageTypes::MRSTextMessage:
+		{
+			// Display the incoming text message locally (and/or log it):
+			String msg = String((char*)commandPayload);
+			oled.setCursor(0, 30);
+			oled.print(msg);
+			oled.display();
+			commandHandled = true;
+		}
+		break;
+
+		case MRSCommandTypes::TestLocalDisplay:
+			// Run demo / test of local display hardware:
+			if (ArduinoControllerBaseClass::TestLocalDisplay())
+			{
+				ArduinoControllerBaseClass::SendTextMessage("Local display OK");
+			}
+			else
+			{
+				ArduinoControllerBaseClass::SendTextMessage("Local display FAIL");
+			}
+			commandHandled = false;
+			break;
+
+		case MRSCommandTypes::TestMotors:
+		{
+			TestMotors();
+			commandHandled = true;
+		}
+
+		default:
+			break;
+	}
+
+	if (!commandHandled)
+	{
+		ArduinoControllerBaseClass::ExecuteCommand(command, commandPayload);
+	}
 }
 
-void ArdumotoControllerClass::SetupArdumotoBoard()
+void ArdumotoController::SetupArdumotoBoard()
 {
 	pinMode(LMDirPin, OUTPUT);
 	pinMode(LMPWMPin, OUTPUT);
@@ -74,18 +147,18 @@ void ArdumotoControllerClass::SetupArdumotoBoard()
 
 }
 
-void ArdumotoControllerClass::StopMotor(byte motor)
+void ArdumotoController::StopMotor(byte motor)
 {
 	SetMotor(motor, 0, 0);
 }
 
-void ArdumotoControllerClass::StopAllMotors()
+void ArdumotoController::StopAllMotors()
 {
 	SetMotor(LeftMotor, 0, 0);
 	SetMotor(RightMotor, 0, 0);
 }
 
-void ArdumotoControllerClass::SetMotor(byte motor, byte dir, byte speed)
+void ArdumotoController::SetMotor(byte motor, byte dir, byte speed)
 {
 	switch (motor)
 	{
@@ -108,6 +181,3 @@ void ArdumotoControllerClass::SetMotor(byte motor, byte dir, byte speed)
 
 	}
 }
-
-//ArdumotoControllerClass ArdumotoController;
-

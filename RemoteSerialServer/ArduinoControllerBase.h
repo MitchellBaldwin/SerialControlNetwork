@@ -26,23 +26,21 @@
 class ArduinoControllerBaseClass
 {
 private:
-	const uint8_t BUILTINLED = 13;
-	
 	void EchoCommandMessage(uint8_t, uint8_t*);
-	void SendTextMessage(String);
-	bool TestLocalDisplay();
-	void ToggleLED();
 
 protected:
 	virtual void ExecuteCommand(uint8_t);
 	virtual void ExecuteCommand(uint8_t, uint8_t*);
 	void GetStatusReport();
+	void SendTextMessage(String);
+	bool TestLocalDisplay();
+	void ToggleLED();
 
  public:
 	ArduinoControllerBaseClass();
 	void Init(PacketSerial::PacketHandlerFunction);
-	void Update();
 	void ProcessMessages(const uint8_t*, size_t);
+	void Update();
 
 };
 

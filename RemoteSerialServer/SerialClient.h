@@ -9,7 +9,7 @@
 */
 
 #pragma once
-#include <PacketSerial.h>>
+#include <PacketSerial.h>
 
 class SerialClient
 {

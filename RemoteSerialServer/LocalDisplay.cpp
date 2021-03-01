@@ -10,8 +10,6 @@
 
 void LocalDisplayClass::init()
 {
-	//oled = MicroOLED(PIN_RESET, DC_JUMPER);
-	
 	Wire.begin();
 
 	delay(100);
@@ -20,6 +18,11 @@ void LocalDisplayClass::init()
 	oled.display();  // Display what's in the buffer (splashscreen)
 
 
+}
+
+void LocalDisplayClass::ClearPage()
+{
+	oled.clear(PAGE);
 }
 
 bool LocalDisplayClass::RunFont0Demo()
@@ -64,6 +67,8 @@ bool LocalDisplayClass::RunFont0Demo()
 
 void LocalDisplayClass::Write(String msg)
 {
+	//oled.clear(PAGE);
+	oled.setCursor(0, 0);
 	oled.print(msg);
 	oled.display();
 }
