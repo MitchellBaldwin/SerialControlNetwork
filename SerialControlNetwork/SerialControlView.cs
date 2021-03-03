@@ -66,6 +66,12 @@ namespace SerialControlNetwork
             MRSPSP.SendCommandMessage((byte)MRSMessageType.TestLocalDisplay, dummy);
         }
 
+        private void MRSTestMotorsButton_Click(object sender, EventArgs e)
+        {
+            byte[] dummy = { 0x00 };
+            MRSPSP.SendCommandMessage((byte)MRSMessageType.TestMotors, dummy);
+        }
+
 
         // MRS Remote Controller Controls *************************************************************************************
         private void TestMRSRCComsButton_Click(object sender, EventArgs e)
@@ -99,8 +105,17 @@ namespace SerialControlNetwork
                 {
                     msg[i - 1] = (char)buffer[i];
                 }
-                MessageTextBox.AppendText(new string(msg));
+                if (MessageTextBox.Lines.Length > 0)
+                {
+                    MessageTextBox.AppendText(Environment.NewLine + new string(msg));
+                }
+                else
+                {
+                    MessageTextBox.AppendText(new string(msg));
+                }
+
             }
         }
+
     }
 }

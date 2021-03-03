@@ -19,8 +19,8 @@ SerialClient::~SerialClient()
 
 void SerialClient::Begin(unsigned long baudRate)
 {
-	Serial.begin(baudRate);
-	SerialClientConnection.setStream(&Serial);
+	//Serial1.begin(baudRate);
+	SerialClientConnection.setStream(&Serial1);
 }
 
 void SerialClient::SetPacketHandler(PacketSerial::PacketHandlerFunction onPacketFunction)

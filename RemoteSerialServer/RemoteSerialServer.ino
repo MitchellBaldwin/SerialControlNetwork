@@ -19,7 +19,7 @@ void setup()
 {
 	//ArduinoControllerBase.Init(&OnSerialClientMessage);
 	R5MRSMCC.Init(&OnSerialClientMessage);
-	R5MRSMCC.TestMotors();
+	//R5MRSMCC.TestMotors();
 }
 
 void loop()

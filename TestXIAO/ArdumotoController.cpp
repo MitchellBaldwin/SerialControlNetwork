@@ -30,13 +30,12 @@ void ArdumotoController::Init(PacketSerial::PacketHandlerFunction OnSerialClient
 	SetupArdumotoBoard();
 
 	Wire.begin();
+
 	delay(100);
-	if (TestDisplay())
-	{
-		oled.begin();    // Initialize the OLED
-		oled.clear(PAGE); // Clear the display's internal memory
-		oled.display();  // Display what's in the buffer (splashscreen)
-	}
+	oled.begin();    // Initialize the OLED
+	oled.clear(PAGE); // Clear the display's internal memory
+	//oled.display();  // Display what's in the buffer (splashscreen)
+	TestDisplay();
 
 }
 
@@ -60,35 +59,27 @@ void ArdumotoController::TestMotors()
 	//delay(500);
 }
 
-bool ArdumotoController::TestDisplay()
-{
-	Wire.beginTransmission(I2C_ADDRESS_SA0_1);
-	if (Wire.endTransmission(0) == 0)
-	{
-		uint8_t fontHeight = oled.getFontHeight();
-		oled.setCursor(0, 10);
-		oled.print("Font h: " + String(fontHeight));
-		oled.display();
-		DisplayPresent = true;
-	}
-	else
-	{
-		DisplayPresent = false;
-	}
-	return DisplayPresent;
-}
-
 void ArdumotoController::Update()
 {
-	ArduinoControllerBaseClass::Update();
-
 	//oled.clear(PAGE);
 	// Read and display battery supply voltage
 	uint16_t VBat5Raw = analogRead(VMotorPin);
 	oled.setCursor(0, 0);
 	oled.print("VBat5: " + String(VBat5Raw));
+	//oled.display();
+
+	ArduinoControllerBaseClass::Update();
+
+}
+
+bool ArdumotoController::TestDisplay()
+{
+	uint8_t fontHeight = oled.getFontHeight();
+	oled.setCursor(0, 10);
+	oled.print("Font h: " + String(fontHeight));
 	oled.display();
 
+	return true;
 }
 
 void ArdumotoController::ExecuteCommand(uint8_t)
@@ -112,12 +103,13 @@ void ArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload
 			SendTextMessage("This is a test...");
 
 			commandHandled = true;
+
 		}
 		break;
 
 		case MRSCommandTypes::TestLocalDisplay:
 			// Run demo / test of local display hardware:
-			if (TestDisplay())
+			if (ArduinoControllerBaseClass::TestLocalDisplay())
 			{
 				ArduinoControllerBaseClass::SendTextMessage("Local display OK");
 			}

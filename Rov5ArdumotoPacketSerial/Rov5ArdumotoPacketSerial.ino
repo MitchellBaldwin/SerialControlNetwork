@@ -3,7 +3,7 @@
  Created:	2/28/2021 11:51:58 AM
  Author:	Mitchell Baldwin
 
- Test program for Rover 5 chassis using Arduino Pro controller and PacketSerial server; 
+ Test program for Rover 5 chassis using Arduino Pro controller and PacketSerial server 
 
 */
 
@@ -15,7 +15,6 @@ ArdumotoController R5MRSMCC;
 void setup()
 {
 	R5MRSMCC.Init(&OnSerialClientMessage);
-	R5MRSMCC.TestMotors();
 }
 
 void loop()

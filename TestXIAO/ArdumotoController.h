@@ -29,17 +29,16 @@ class ArdumotoController : public ArduinoControllerBaseClass
 		void StopMotor(byte);
 		void StopAllMotors();
 		void SetMotor(byte, byte, byte);
-		bool DisplayPresent = false;
 
 	protected:
 		MicroOLED oled = MicroOLED(PIN_RESET, DC_JUMPER);
-		void TestMotors();
 		bool TestDisplay();
 		virtual void ExecuteCommand(uint8_t);
 		virtual void ExecuteCommand(uint8_t, uint8_t*);
 
 	public:
 		void Init(PacketSerial::PacketHandlerFunction);
+		void TestMotors();
 		void Update();
 };
 
