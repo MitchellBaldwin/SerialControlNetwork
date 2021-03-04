@@ -1,17 +1,11 @@
 /*
-  Blink
-  Turns on an LED on for one second, then off for one second, repeatedly.
+ Name:		TestXIAO.ino
+ Created:	03/01/2021 11:51:58 AM
+ Author:	Mitchell Baldwin
 
-  Most Arduinos have an on-board LED you can control. On the Uno and
-  Leonardo, it is attached to digital pin 13. If you're unsure what
-  pin the on-board LED is connected to on your Arduino model, check
-  the documentation at http://arduino.cc
+ Test program for Rover 5 chassis using Seeed Studio XIAO and PacketSerial server
 
-  This example code is in the public domain.
-
-  modified 8 May 2014
-  by Scott Fitzgerald
- */
+*/
 
 #include <PacketSerial.h>
 #include "ArdumotoController.h"
@@ -21,12 +15,15 @@ ArdumotoController R5MRSMCC;
 bool FirstTime = true;
 
 void setup() {
-  // initialize digital pin 13 as an output.
-  pinMode(LED_BUILTIN, OUTPUT);
-	SerialUSB.begin(115200);
+  // Should not be needed; handled in ArduinoControllerBase
+  //pinMode(LED_BUILTIN, OUTPUT);	// Initialize digital pin 13 as an output.
+	
+	// Use USB serial connection for debugger:
+	SerialUSB.begin(115200);	
 	SerialUSB.println("\r\nConnected...");
-
-	Serial1.begin(115200);
+	
+	// Use hardware UART for COBS (PacketSerial) serial communication:
+	Serial1.begin(115200);	
 	R5MRSMCC.Init(&OnSerialClientMessage);
 
 }

@@ -33,9 +33,9 @@ void ArdumotoController::Init(PacketSerial::PacketHandlerFunction OnSerialClient
 	delay(100);
 	if (TestDisplay())
 	{
-		oled.begin();    // Initialize the OLED
+		oled.begin();			// Initialize the OLED
 		oled.clear(PAGE); // Clear the display's internal memory
-		oled.display();  // Display what's in the buffer (splashscreen)
+		oled.display();		// Display what's in the buffer (splashscreen)
 	}
 
 }

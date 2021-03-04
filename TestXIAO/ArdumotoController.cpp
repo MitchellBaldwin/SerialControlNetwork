@@ -32,11 +32,33 @@ void ArdumotoController::Init(PacketSerial::PacketHandlerFunction OnSerialClient
 	Wire.begin();
 
 	delay(100);
-	oled.begin();    // Initialize the OLED
-	oled.clear(PAGE); // Clear the display's internal memory
-	//oled.display();  // Display what's in the buffer (splashscreen)
-	TestDisplay();
+	if (TestDisplay())
+	{
+		oled.begin();			// Initialize the OLED
+		oled.clear(PAGE); // Clear the display's internal memory
+		oled.display();	  // Display what's in the buffer (splashscreen)
+	}
 
+}
+
+bool ArdumotoController::TestDisplay()
+{
+	Wire.beginTransmission(I2C_ADDRESS_SA0_1);
+	if (Wire.endTransmission(0) == 0)
+	{
+		//uint8_t fontHeight = oled.getFontHeight();
+		uint8_t screenWidth = oled.getLCDWidth();
+		uint8_t screenHeight = oled.getLCDHeight();
+		oled.setCursor(0, 9);
+		oled.print("WxH: " + String(screenWidth) + "x" + String(screenHeight));
+		oled.display();
+		DisplayPresent = true;
+	}
+	else
+	{
+		DisplayPresent = false;
+	}
+	return DisplayPresent;
 }
 
 void ArdumotoController::TestMotors()
@@ -66,20 +88,10 @@ void ArdumotoController::Update()
 	uint16_t VBat5Raw = analogRead(VMotorPin);
 	oled.setCursor(0, 0);
 	oled.print("VBat5: " + String(VBat5Raw));
-	//oled.display();
+	oled.display();
 
 	ArduinoControllerBaseClass::Update();
 
-}
-
-bool ArdumotoController::TestDisplay()
-{
-	uint8_t fontHeight = oled.getFontHeight();
-	oled.setCursor(0, 10);
-	oled.print("Font h: " + String(fontHeight));
-	oled.display();
-
-	return true;
 }
 
 void ArdumotoController::ExecuteCommand(uint8_t)
@@ -109,7 +121,7 @@ void ArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload
 
 		case MRSCommandTypes::TestLocalDisplay:
 			// Run demo / test of local display hardware:
-			if (ArduinoControllerBaseClass::TestLocalDisplay())
+			if (TestDisplay())
 			{
 				ArduinoControllerBaseClass::SendTextMessage("Local display OK");
 			}
