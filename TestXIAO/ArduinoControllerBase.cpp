@@ -10,6 +10,7 @@
 #include "ArduinoControllerBase.h"
 #include "MRSCommandTypes.h"
 #include "MRSMessageTypes.h"
+#include "Wire.h"
 
 
 ArduinoControllerBaseClass::ArduinoControllerBaseClass()
@@ -117,7 +118,6 @@ void ArduinoControllerBaseClass::EchoCommandMessage(uint8_t command, uint8_t *co
 	{
 		ClientConnection.outPacketPayload[i] = commandPayload[i];
 	}
-	//delay(100);
 	ClientConnection.SendPacket();
 }
 
@@ -141,14 +141,47 @@ void ArduinoControllerBaseClass::SendTextMessage(String msg)
 bool ArduinoControllerBaseClass::TestLocalDisplay()
 {
 	return true;
-	//if (LocalDisplay.RunFont0Demo())
-	//{
-	//	return true;
-	//}
-	//else
-	//{
-	//	return false;
-	//}
+}
+
+void ArduinoControllerBaseClass::ScanI2CBus()
+{
+	int nDevices = 0;
+	for (byte address = 1; address < 127; ++address) 
+	{
+		// The i2c_scanner uses the return value of
+		// the Write.endTransmisstion to see if
+		// a device did acknowledge to the address.
+		Wire.beginTransmission(address);
+		byte error = Wire.endTransmission();
+		char msg[SerialClient::PACKET_PAYLOAD_SIZE];
+
+		if (error == 0)
+		{
+			sprintf(msg, "I2C device found at 0x%2X", address);
+			SendTextMessage(msg);
+			sprintf(msg, "I2C device found at 0x%2X\n", address);
+			Serial.print(msg);
+			++nDevices;
+		}
+		else if (error == 4)
+		{
+			sprintf(msg, "Unknown error at 0x%2X", address);
+			SendTextMessage(msg);
+			sprintf(msg, "Unknown error at 0x%2X\n", address);
+			Serial.print(msg);
+		}
+	}
+	
+	if (nDevices == 0) 
+	{
+		Serial.println("No I2C devices found\n");
+		SendTextMessage("No I2C devices found");
+	}
+	else 
+	{
+		Serial.println("I2C bus scan complete\n");
+		SendTextMessage("I2C bus scan complete");
+	}
 }
 
 void ArduinoControllerBaseClass::GetStatusReport()

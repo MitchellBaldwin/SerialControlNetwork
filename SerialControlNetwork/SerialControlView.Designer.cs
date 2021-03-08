@@ -30,10 +30,6 @@
         {
             this.SystemsTabControl = new System.Windows.Forms.TabControl();
             this.SerialComsTabPage = new System.Windows.Forms.TabPage();
-            this.MRSSYSDiagnosticsButton = new System.Windows.Forms.Button();
-            this.GetMRSTestTextMessageButton = new System.Windows.Forms.Button();
-            this.GetMRSRCStatusButton = new System.Windows.Forms.Button();
-            this.TestMRSRCComsButton = new System.Windows.Forms.Button();
             this.GetMRSStatusButton = new System.Windows.Forms.Button();
             this.TestMRSComsButton = new System.Windows.Forms.Button();
             this.MRSRCPSP = new SerialControlNetwork.PacketSerialPortPanel();
@@ -45,8 +41,13 @@
             this.STatusLabel = new System.Windows.Forms.Label();
             this.MRSRCGroupBox = new System.Windows.Forms.GroupBox();
             this.MRSTestMotorsButton = new System.Windows.Forms.Button();
+            this.MRSSYSDiagnosticsButton = new System.Windows.Forms.Button();
+            this.GetMRSTestTextMessageButton = new System.Windows.Forms.Button();
+            this.GetMRSRCStatusButton = new System.Windows.Forms.Button();
+            this.TestMRSRCComsButton = new System.Windows.Forms.Button();
             this.SystemsTabControl.SuspendLayout();
             this.SerialComsTabPage.SuspendLayout();
+            this.DiagnosticsTabPage.SuspendLayout();
             this.MRSGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -63,9 +64,6 @@
             // 
             // SerialComsTabPage
             // 
-            this.SerialComsTabPage.Controls.Add(this.MRSTestMotorsButton);
-            this.SerialComsTabPage.Controls.Add(this.MRSSYSDiagnosticsButton);
-            this.SerialComsTabPage.Controls.Add(this.GetMRSTestTextMessageButton);
             this.SerialComsTabPage.Controls.Add(this.GetMRSRCStatusButton);
             this.SerialComsTabPage.Controls.Add(this.TestMRSRCComsButton);
             this.SerialComsTabPage.Controls.Add(this.GetMRSStatusButton);
@@ -79,46 +77,6 @@
             this.SerialComsTabPage.TabIndex = 0;
             this.SerialComsTabPage.Text = "Coms";
             this.SerialComsTabPage.UseVisualStyleBackColor = true;
-            // 
-            // MRSSYSDiagnosticsButton
-            // 
-            this.MRSSYSDiagnosticsButton.Location = new System.Drawing.Point(146, 35);
-            this.MRSSYSDiagnosticsButton.Name = "MRSSYSDiagnosticsButton";
-            this.MRSSYSDiagnosticsButton.Size = new System.Drawing.Size(132, 23);
-            this.MRSSYSDiagnosticsButton.TabIndex = 10;
-            this.MRSSYSDiagnosticsButton.Text = "SYS Diagnostics";
-            this.MRSSYSDiagnosticsButton.UseVisualStyleBackColor = true;
-            this.MRSSYSDiagnosticsButton.Click += new System.EventHandler(this.MRSSYSDiagnosticsButton_Click);
-            // 
-            // GetMRSTestTextMessageButton
-            // 
-            this.GetMRSTestTextMessageButton.Location = new System.Drawing.Point(146, 6);
-            this.GetMRSTestTextMessageButton.Name = "GetMRSTestTextMessageButton";
-            this.GetMRSTestTextMessageButton.Size = new System.Drawing.Size(132, 23);
-            this.GetMRSTestTextMessageButton.TabIndex = 9;
-            this.GetMRSTestTextMessageButton.Text = "Get Test Text";
-            this.GetMRSTestTextMessageButton.UseVisualStyleBackColor = true;
-            this.GetMRSTestTextMessageButton.Click += new System.EventHandler(this.GetMRSTestTextMessageButton_Click);
-            // 
-            // GetMRSRCStatusButton
-            // 
-            this.GetMRSRCStatusButton.Location = new System.Drawing.Point(572, 35);
-            this.GetMRSRCStatusButton.Name = "GetMRSRCStatusButton";
-            this.GetMRSRCStatusButton.Size = new System.Drawing.Size(132, 23);
-            this.GetMRSRCStatusButton.TabIndex = 8;
-            this.GetMRSRCStatusButton.Text = "Get MRS RC status";
-            this.GetMRSRCStatusButton.UseVisualStyleBackColor = true;
-            this.GetMRSRCStatusButton.Click += new System.EventHandler(this.GetMRSRCStatusButton_Click);
-            // 
-            // TestMRSRCComsButton
-            // 
-            this.TestMRSRCComsButton.Location = new System.Drawing.Point(572, 6);
-            this.TestMRSRCComsButton.Name = "TestMRSRCComsButton";
-            this.TestMRSRCComsButton.Size = new System.Drawing.Size(132, 23);
-            this.TestMRSRCComsButton.TabIndex = 7;
-            this.TestMRSRCComsButton.Text = "Test MRS RC Coms";
-            this.TestMRSRCComsButton.UseVisualStyleBackColor = true;
-            this.TestMRSRCComsButton.Click += new System.EventHandler(this.TestMRSRCComsButton_Click);
             // 
             // GetMRSStatusButton
             // 
@@ -160,6 +118,9 @@
             // 
             // DiagnosticsTabPage
             // 
+            this.DiagnosticsTabPage.Controls.Add(this.MRSSYSDiagnosticsButton);
+            this.DiagnosticsTabPage.Controls.Add(this.GetMRSTestTextMessageButton);
+            this.DiagnosticsTabPage.Controls.Add(this.MRSTestMotorsButton);
             this.DiagnosticsTabPage.Location = new System.Drawing.Point(4, 22);
             this.DiagnosticsTabPage.Name = "DiagnosticsTabPage";
             this.DiagnosticsTabPage.Padding = new System.Windows.Forms.Padding(3);
@@ -221,13 +182,53 @@
             // 
             // MRSTestMotorsButton
             // 
-            this.MRSTestMotorsButton.Location = new System.Drawing.Point(284, 6);
+            this.MRSTestMotorsButton.Location = new System.Drawing.Point(8, 64);
             this.MRSTestMotorsButton.Name = "MRSTestMotorsButton";
             this.MRSTestMotorsButton.Size = new System.Drawing.Size(132, 23);
-            this.MRSTestMotorsButton.TabIndex = 11;
+            this.MRSTestMotorsButton.TabIndex = 12;
             this.MRSTestMotorsButton.Text = "Test Motors";
             this.MRSTestMotorsButton.UseVisualStyleBackColor = true;
             this.MRSTestMotorsButton.Click += new System.EventHandler(this.MRSTestMotorsButton_Click);
+            // 
+            // MRSSYSDiagnosticsButton
+            // 
+            this.MRSSYSDiagnosticsButton.Location = new System.Drawing.Point(8, 35);
+            this.MRSSYSDiagnosticsButton.Name = "MRSSYSDiagnosticsButton";
+            this.MRSSYSDiagnosticsButton.Size = new System.Drawing.Size(132, 23);
+            this.MRSSYSDiagnosticsButton.TabIndex = 16;
+            this.MRSSYSDiagnosticsButton.Text = "SYS Diagnostics";
+            this.MRSSYSDiagnosticsButton.UseVisualStyleBackColor = true;
+            this.MRSSYSDiagnosticsButton.Click += new System.EventHandler(this.MRSSYSDiagnosticsButton_Click);
+            // 
+            // GetMRSTestTextMessageButton
+            // 
+            this.GetMRSTestTextMessageButton.Location = new System.Drawing.Point(8, 6);
+            this.GetMRSTestTextMessageButton.Name = "GetMRSTestTextMessageButton";
+            this.GetMRSTestTextMessageButton.Size = new System.Drawing.Size(132, 23);
+            this.GetMRSTestTextMessageButton.TabIndex = 15;
+            this.GetMRSTestTextMessageButton.Text = "Get Test Text";
+            this.GetMRSTestTextMessageButton.UseVisualStyleBackColor = true;
+            this.GetMRSTestTextMessageButton.Click += new System.EventHandler(this.GetMRSTestTextMessageButton_Click);
+            // 
+            // GetMRSRCStatusButton
+            // 
+            this.GetMRSRCStatusButton.Location = new System.Drawing.Point(526, 35);
+            this.GetMRSRCStatusButton.Name = "GetMRSRCStatusButton";
+            this.GetMRSRCStatusButton.Size = new System.Drawing.Size(132, 23);
+            this.GetMRSRCStatusButton.TabIndex = 16;
+            this.GetMRSRCStatusButton.Text = "Get MRS RC status";
+            this.GetMRSRCStatusButton.UseVisualStyleBackColor = true;
+            this.GetMRSRCStatusButton.Click += new System.EventHandler(this.GetMRSRCStatusButton_Click);
+            // 
+            // TestMRSRCComsButton
+            // 
+            this.TestMRSRCComsButton.Location = new System.Drawing.Point(526, 6);
+            this.TestMRSRCComsButton.Name = "TestMRSRCComsButton";
+            this.TestMRSRCComsButton.Size = new System.Drawing.Size(132, 23);
+            this.TestMRSRCComsButton.TabIndex = 15;
+            this.TestMRSRCComsButton.Text = "Test MRS RC Coms";
+            this.TestMRSRCComsButton.UseVisualStyleBackColor = true;
+            this.TestMRSRCComsButton.Click += new System.EventHandler(this.TestMRSRCComsButton_Click);
             // 
             // SerialControlView
             // 
@@ -243,6 +244,7 @@
             this.Load += new System.EventHandler(this.SerialControlView_Load);
             this.SystemsTabControl.ResumeLayout(false);
             this.SerialComsTabPage.ResumeLayout(false);
+            this.DiagnosticsTabPage.ResumeLayout(false);
             this.MRSGroupBox.ResumeLayout(false);
             this.MRSGroupBox.PerformLayout();
             this.ResumeLayout(false);
@@ -257,16 +259,16 @@
         private System.Windows.Forms.Button TestMRSComsButton;
         private PacketSerialPortPanel MRSRCPSP;
         private PacketSerialPortPanel MRSPSP;
-        private System.Windows.Forms.Button GetMRSRCStatusButton;
-        private System.Windows.Forms.Button TestMRSRCComsButton;
         private System.Windows.Forms.GroupBox MRSGroupBox;
         private System.Windows.Forms.GroupBox MRSRCGroupBox;
         private System.Windows.Forms.Label StatusDisplayLabel;
         private System.Windows.Forms.Label STatusLabel;
-        private System.Windows.Forms.Button GetMRSTestTextMessageButton;
         private System.Windows.Forms.TextBox MessageTextBox;
-        private System.Windows.Forms.Button MRSSYSDiagnosticsButton;
         private System.Windows.Forms.Button MRSTestMotorsButton;
+        private System.Windows.Forms.Button MRSSYSDiagnosticsButton;
+        private System.Windows.Forms.Button GetMRSTestTextMessageButton;
+        private System.Windows.Forms.Button GetMRSRCStatusButton;
+        private System.Windows.Forms.Button TestMRSRCComsButton;
     }
 }
 

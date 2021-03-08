@@ -164,7 +164,7 @@ void ArdumotoController::StopMotor(byte motor)
 	SetMotor(motor, 0, 0);
 }
 
-void ArdumotoController::StopAllMotors()
+void ArdumotoController::StopBothMotors()
 {
 	SetMotor(LeftMotor, 0, 0);
 	SetMotor(RightMotor, 0, 0);

@@ -28,7 +28,7 @@ namespace RecoverProMicro
             {
                 FileName = HexFileNameWithFullPath,
                 PortName = ProMicroUSBSerial.PortName,
-                ArduinoModel = ArduinoUploader.Hardware.ArduinoModel.Micro
+                ArduinoModel = ArduinoUploader.Hardware.ArduinoModel.Leonardo
             });
 
             try

@@ -25,11 +25,17 @@
 class ArdumotoController : public ArduinoControllerBaseClass
 {
 	private:
+		bool DisplayPresent = false;
 		void SetupArdumotoBoard();
 		void StopMotor(byte);
-		void StopAllMotors();
+		void StopBothMotors();
+		void Stop();
 		void SetMotor(byte, byte, byte);
-		bool DisplayPresent = false;
+		void SetBothMotors(byte, byte);
+		void DriveForward(byte);
+		void DriveBackward(byte);
+		void PivotLeft(byte);
+		void PivotRight(byte);
 
 	protected:
 		MicroOLED oled = MicroOLED(PIN_RESET, DC_JUMPER);

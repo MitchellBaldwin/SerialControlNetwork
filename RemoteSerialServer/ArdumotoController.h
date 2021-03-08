@@ -27,7 +27,7 @@ class ArdumotoController : public ArduinoControllerBaseClass
 	private:
 		void SetupArdumotoBoard();
 		void StopMotor(byte);
-		void StopAllMotors();
+		void StopBothMotors();
 		void SetMotor(byte, byte, byte);
 		bool DisplayPresent = false;
 

@@ -1,7 +1,8 @@
 /*	ArdumotorControllerClass - Implementation of ArduinoControllerBase
 *
-*	Base class for MRS Master Communications Controller (MRSMCC) and other embedded software modules
-*	that rely on UART serial communication links
+*	Implement MRS Master Communications Controller (MRSMCC) based on Seeeduino XIAO
+*	Uses COBS encoding (PacketSerial library, implemented in SerialClient class)
+* Uses Sparkfun Qwiic Micro OLED Breakout as a local display
 *
 *	Mitchell Baldwin copyright 2021
 *
@@ -17,6 +18,7 @@
 constexpr auto LeftMotor = 0;
 constexpr auto RightMotor = 1;
 
+// TODO: Update pins used on Seeeduino XIOA
 const byte LMDirPin = 12;
 const byte LMPWMPin = 3;
 const byte RMDirPin = 13;
@@ -29,14 +31,17 @@ void ArdumotoController::Init(PacketSerial::PacketHandlerFunction OnSerialClient
 	ArduinoControllerBaseClass::Init(OnSerialClientMessage);
 	SetupArdumotoBoard();
 
-	Wire.begin();
+	Wire.begin();	// Start I2C bus
+	delay(100);	// Allow I2C bus time to initialize
 
-	delay(100);
-	if (TestDisplay())
+	// Check for presence of SF uOLED display module and initialize if detected:
+	Wire.beginTransmission(I2C_ADDRESS_SA0_1);
+	if (Wire.endTransmission(0) == 0)
 	{
 		oled.begin();			// Initialize the OLED
 		oled.clear(PAGE); // Clear the display's internal memory
 		oled.display();	  // Display what's in the buffer (splashscreen)
+		DisplayPresent = true;
 	}
 
 }
@@ -78,20 +83,20 @@ void ArdumotoController::TestMotors()
 	SetMotor(RightMotor, REVERSE, 127);
 	delay(2000);
 	SetMotor(RightMotor, 0, 0);
-	//delay(500);
+	delay(500);
 }
 
 void ArdumotoController::Update()
 {
-	//oled.clear(PAGE);
 	// Read and display battery supply voltage
 	uint16_t VBat5Raw = analogRead(VMotorPin);
-	oled.setCursor(0, 0);
-	oled.print("VBat5: " + String(VBat5Raw));
-	oled.display();
-
+	if (DisplayPresent)
+	{
+		oled.setCursor(0, 0);
+		oled.print("VBat5: " + String(VBat5Raw));
+		oled.display();
+	}
 	ArduinoControllerBaseClass::Update();
-
 }
 
 void ArdumotoController::ExecuteCommand(uint8_t)
@@ -108,13 +113,16 @@ void ArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload
 		case MRSMessageTypes::MRSTextMessage:
 		{
 			// Display the incoming text message locally (and/or log it):
-			String msg = String((char*)commandPayload);
-			oled.setCursor(0, 30);
-			oled.print(msg);
-			oled.display();
-			SendTextMessage("This is a test...");
+			if (DisplayPresent)
+			{
+				String msg = String((char*)commandPayload);
+				oled.setCursor(0, 30);
+				oled.print(msg);
+				oled.display();
+				SendTextMessage("This is a test...");
 
-			commandHandled = true;
+				commandHandled = true;
+			}
 
 		}
 		break;
@@ -123,19 +131,20 @@ void ArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload
 			// Run demo / test of local display hardware:
 			if (TestDisplay())
 			{
-				ArduinoControllerBaseClass::SendTextMessage("Local display OK");
+				SendTextMessage("Local display OK");
 			}
 			else
 			{
-				ArduinoControllerBaseClass::SendTextMessage("Local display FAIL");
+				SendTextMessage("Local display FAIL");
 			}
+			ScanI2CBus();
 			commandHandled = true;
 			break;
 
 		case MRSCommandTypes::TestMotors:
 		{
 			TestMotors();
-			ArduinoControllerBaseClass::SendTextMessage("Motor test complete");
+			SendTextMessage("Motor test complete");
 			commandHandled = true;
 		}
 
@@ -168,32 +177,67 @@ void ArdumotoController::StopMotor(byte motor)
 	SetMotor(motor, 0, 0);
 }
 
-void ArdumotoController::StopAllMotors()
+void ArdumotoController::StopBothMotors()
 {
 	SetMotor(LeftMotor, 0, 0);
 	SetMotor(RightMotor, 0, 0);
+}
+
+void ArdumotoController::Stop()
+{
+	StopBothMotors();
 }
 
 void ArdumotoController::SetMotor(byte motor, byte dir, byte speed)
 {
 	switch (motor)
 	{
-	case LeftMotor:
-	{
-		digitalWrite(LMDirPin, dir);
-		analogWrite(LMPWMPin, speed);
-		break;
-	}
+		case LeftMotor:
+		{
+			digitalWrite(LMDirPin, dir);
+			analogWrite(LMPWMPin, speed);
+			break;
+		}
 
-	case RightMotor:
-	{
-		digitalWrite(RMDirPin, dir);
-		analogWrite(RMPWMPin, speed);
-		break;
-	}
+		case RightMotor:
+		{
+			digitalWrite(RMDirPin, dir);
+			analogWrite(RMPWMPin, speed);
+			break;
+		}
 
-	default:
-		break;
+		default:
+			break;
 
 	}
+}
+
+void ArdumotoController::SetBothMotors(byte dir, byte speed)
+{
+	digitalWrite(LMDirPin, dir);
+	analogWrite(LMPWMPin, speed);
+	digitalWrite(RMDirPin, dir);
+	analogWrite(RMPWMPin, speed);
+}
+
+void ArdumotoController::DriveForward(byte speed)
+{
+	SetBothMotors(FORWARD, speed);
+}
+
+void ArdumotoController::DriveBackward(byte speed)
+{
+	SetBothMotors(REVERSE, speed);
+}
+
+void ArdumotoController::PivotLeft(byte speed)
+{
+	SetMotor(LeftMotor, REVERSE, speed);
+	SetMotor(RightMotor, FORWARD, speed);
+}
+
+void ArdumotoController::PivotRight(byte speed)
+{
+	SetMotor(LeftMotor, FORWARD, speed);
+	SetMotor(RightMotor, REVERSE, speed);
 }

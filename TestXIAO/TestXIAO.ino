@@ -26,6 +26,8 @@ void setup() {
 	Serial1.begin(115200);	
 	R5MRSMCC.Init(&OnSerialClientMessage);
 
+	R5MRSMCC.ScanI2CBus();
+
 }
 
 void loop() 

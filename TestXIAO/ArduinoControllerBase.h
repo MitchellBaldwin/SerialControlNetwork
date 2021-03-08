@@ -41,6 +41,7 @@ protected:
 	void Init(PacketSerial::PacketHandlerFunction);
 	void ProcessMessages(const uint8_t*, size_t);
 	void Update();
+	void ScanI2CBus();
 
 };
 
