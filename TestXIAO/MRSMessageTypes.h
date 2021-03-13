@@ -25,9 +25,12 @@ class MRSMessageTypes
 
 	 public:
 
-		 static const uint8_t MRSTextMessage = 0x0F;
-		 static const uint8_t MRSStatusPacket = 0x10;
+		 static const uint8_t MRSStatusPacket = 0x00;
 
+		 static const uint8_t DSMCUStatusPacket = 0x04;
+
+		 static const uint8_t MRSTextMessage = 0x0F;
+		 
 };
 
 #endif
