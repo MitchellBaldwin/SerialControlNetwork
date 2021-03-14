@@ -8,7 +8,7 @@
 *
 */
 
-#include "ArdumotoController.h"
+#include "ArdProArdumotoController.h"
 
 #define FORWARD	0
 #define REVERSE 1
@@ -24,9 +24,9 @@ const byte RMPWMPin = 11;
 
 constexpr byte VMotorPin = A0;
 
-void ArdumotoController::Init(PacketSerial::PacketHandlerFunction OnSerialClientMessage)
+void ArdProArdumotoController::Init(PacketSerial::PacketHandlerFunction OnSerialClientMessage)
 {
-	ArduinoControllerBase::Init(OnSerialClientMessage);
+	ArduinoControllerBase::Init(SerialClient::SerialOverUSB, OnSerialClientMessage);
 	SetupArdumotoBoard();
 
 	Wire.begin();	// Start I2C bus
@@ -44,7 +44,7 @@ void ArdumotoController::Init(PacketSerial::PacketHandlerFunction OnSerialClient
 
 }
 
-bool ArdumotoController::TestDisplay()
+bool ArdProArdumotoController::TestDisplay()
 {
 	Wire.beginTransmission(I2C_ADDRESS_SA0_1);
 	if (Wire.endTransmission(0) == 0)
@@ -64,7 +64,7 @@ bool ArdumotoController::TestDisplay()
 	return DisplayPresent;
 }
 
-void ArdumotoController::TestMotors()
+void ArdProArdumotoController::TestMotors()
 {
 	SetMotor(LeftMotor, FORWARD, 127);
 	delay(2000);
@@ -84,7 +84,7 @@ void ArdumotoController::TestMotors()
 	delay(500);
 }
 
-void ArdumotoController::Update()
+void ArdProArdumotoController::Update()
 {
 	// Read and display battery supply voltage
 	uint16_t VBat5Raw = analogRead(VMotorPin);
@@ -97,12 +97,12 @@ void ArdumotoController::Update()
 	ArduinoControllerBase::Update();
 }
 
-void ArdumotoController::ExecuteCommand(uint8_t)
+void ArdProArdumotoController::ExecuteCommand(uint8_t)
 {
 	
 }
 
-void ArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload) //: EcecuteCommand(command, commandPayload)
+void ArdProArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload) //: EcecuteCommand(command, commandPayload)
 {
 	bool commandHandled = false;
 	
@@ -156,7 +156,7 @@ void ArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload
 	}
 }
 
-void ArdumotoController::SetupArdumotoBoard()
+void ArdProArdumotoController::SetupArdumotoBoard()
 {
 	pinMode(LMDirPin, OUTPUT);
 	pinMode(LMPWMPin, OUTPUT);
@@ -170,23 +170,23 @@ void ArdumotoController::SetupArdumotoBoard()
 
 }
 
-void ArdumotoController::StopMotor(byte motor)
+void ArdProArdumotoController::StopMotor(byte motor)
 {
 	SetMotor(motor, 0, 0);
 }
 
-void ArdumotoController::StopBothMotors()
+void ArdProArdumotoController::StopBothMotors()
 {
 	SetMotor(LeftMotor, 0, 0);
 	SetMotor(RightMotor, 0, 0);
 }
 
-void ArdumotoController::Stop()
+void ArdProArdumotoController::Stop()
 {
 	StopBothMotors();
 }
 
-void ArdumotoController::SetMotor(byte motor, byte dir, byte speed)
+void ArdProArdumotoController::SetMotor(byte motor, byte dir, byte speed)
 {
 	switch (motor)
 	{
@@ -210,7 +210,7 @@ void ArdumotoController::SetMotor(byte motor, byte dir, byte speed)
 	}
 }
 
-void ArdumotoController::SetBothMotors(byte dir, byte speed)
+void ArdProArdumotoController::SetBothMotors(byte dir, byte speed)
 {
 	digitalWrite(LMDirPin, dir);
 	analogWrite(LMPWMPin, speed);
@@ -218,23 +218,23 @@ void ArdumotoController::SetBothMotors(byte dir, byte speed)
 	analogWrite(RMPWMPin, speed);
 }
 
-void ArdumotoController::DriveForward(byte speed)
+void ArdProArdumotoController::DriveForward(byte speed)
 {
 	SetBothMotors(FORWARD, speed);
 }
 
-void ArdumotoController::DriveBackward(byte speed)
+void ArdProArdumotoController::DriveBackward(byte speed)
 {
 	SetBothMotors(REVERSE, speed);
 }
 
-void ArdumotoController::PivotLeft(byte speed)
+void ArdProArdumotoController::PivotLeft(byte speed)
 {
 	SetMotor(LeftMotor, REVERSE, speed);
 	SetMotor(RightMotor, FORWARD, speed);
 }
 
-void ArdumotoController::PivotRight(byte speed)
+void ArdProArdumotoController::PivotRight(byte speed)
 {
 	SetMotor(LeftMotor, FORWARD, speed);
 	SetMotor(RightMotor, REVERSE, speed);

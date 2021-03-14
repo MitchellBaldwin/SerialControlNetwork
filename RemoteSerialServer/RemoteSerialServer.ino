@@ -14,7 +14,7 @@ the main (INO) programs implementing the MRSMCC, MRSRC, etc.
 //#include "ArduinoControllerBase.h"
 
 //ArduinoControllerBaseClass ArduinoControllerBase;
-ArdumotoController R5MRSMCC;
+XiaoArdumotoController R5MRSMCC;
 
 
 void setup()

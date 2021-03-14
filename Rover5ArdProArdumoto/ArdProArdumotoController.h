@@ -1,7 +1,7 @@
 // ArdumotoController.h
 
-#ifndef _ARDUMOTOCONTROLLER_h
-#define _XIAOARDUMOTOCONTROLLER_h
+#ifndef _ARDPROARDUMOTOCONTROLLER_h
+#define _ARDPROARDUMOTOCONTROLLER_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
 	#include "arduino.h"
@@ -9,6 +9,7 @@
 	#include "WProgram.h"
 #endif
 
+#include <SerialClient.h>
 #include <ArduinoControllerBase.h>
 
 #include <wire.h>
@@ -22,19 +23,25 @@
 // Set to 1 if the jumper is open (Default), or set to 0 if it's closed.
 #define DC_JUMPER 1
 
-class XiaoArdumotoController : public ArduinoControllerBase
+class ArdProArdumotoController : public ArduinoControllerBase
 {
 	private:
+		bool DisplayPresent = false;
 		void SetupArdumotoBoard();
 		void StopMotor(byte);
 		void StopBothMotors();
+		void Stop();
 		void SetMotor(byte, byte, byte);
-		bool DisplayPresent = false;
+		void SetBothMotors(byte, byte);
+		void DriveForward(byte);
+		void DriveBackward(byte);
+		void PivotLeft(byte);
+		void PivotRight(byte);
 
 	protected:
 		MicroOLED oled = MicroOLED(PIN_RESET, DC_JUMPER);
-		void TestMotors();
 		bool TestDisplay();
+		void TestMotors();
 		virtual void ExecuteCommand(uint8_t);
 		virtual void ExecuteCommand(uint8_t, uint8_t*);
 
@@ -42,8 +49,6 @@ class XiaoArdumotoController : public ArduinoControllerBase
 		void Init(PacketSerial::PacketHandlerFunction);
 		void Update();
 };
-
-//extern ArdumotoControllerClass ArdumotoController;
 
 #endif
 

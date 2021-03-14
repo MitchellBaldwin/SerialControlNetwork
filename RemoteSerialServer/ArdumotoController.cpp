@@ -24,7 +24,7 @@ const byte RMPWMPin = 11;
 
 constexpr byte VMotorPin = A0;
 
-void ArdumotoController::Init(PacketSerial::PacketHandlerFunction OnSerialClientMessage)
+void XiaoArdumotoController::Init(PacketSerial::PacketHandlerFunction OnSerialClientMessage)
 {
 	ArduinoControllerBase::Init(OnSerialClientMessage);
 	SetupArdumotoBoard();
@@ -40,7 +40,7 @@ void ArdumotoController::Init(PacketSerial::PacketHandlerFunction OnSerialClient
 
 }
 
-void ArdumotoController::TestMotors()
+void XiaoArdumotoController::TestMotors()
 {
 	SetMotor(LeftMotor, FORWARD, 127);
 	delay(2000);
@@ -60,7 +60,7 @@ void ArdumotoController::TestMotors()
 	//delay(500);
 }
 
-bool ArdumotoController::TestDisplay()
+bool XiaoArdumotoController::TestDisplay()
 {
 	Wire.beginTransmission(I2C_ADDRESS_SA0_1);
 	if (Wire.endTransmission(0) == 0)
@@ -78,7 +78,7 @@ bool ArdumotoController::TestDisplay()
 	return DisplayPresent;
 }
 
-void ArdumotoController::Update()
+void XiaoArdumotoController::Update()
 {
 	ArduinoControllerBase::Update();
 
@@ -91,12 +91,12 @@ void ArdumotoController::Update()
 
 }
 
-void ArdumotoController::ExecuteCommand(uint8_t)
+void XiaoArdumotoController::ExecuteCommand(uint8_t)
 {
 	
 }
 
-void ArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload) //: EcecuteCommand(command, commandPayload)
+void XiaoArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload) //: EcecuteCommand(command, commandPayload)
 {
 	bool commandHandled = false;
 	
@@ -145,7 +145,7 @@ void ArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload
 	}
 }
 
-void ArdumotoController::SetupArdumotoBoard()
+void XiaoArdumotoController::SetupArdumotoBoard()
 {
 	pinMode(LMDirPin, OUTPUT);
 	pinMode(LMPWMPin, OUTPUT);
@@ -159,18 +159,18 @@ void ArdumotoController::SetupArdumotoBoard()
 
 }
 
-void ArdumotoController::StopMotor(byte motor)
+void XiaoArdumotoController::StopMotor(byte motor)
 {
 	SetMotor(motor, 0, 0);
 }
 
-void ArdumotoController::StopBothMotors()
+void XiaoArdumotoController::StopBothMotors()
 {
 	SetMotor(LeftMotor, 0, 0);
 	SetMotor(RightMotor, 0, 0);
 }
 
-void ArdumotoController::SetMotor(byte motor, byte dir, byte speed)
+void XiaoArdumotoController::SetMotor(byte motor, byte dir, byte speed)
 {
 	switch (motor)
 	{

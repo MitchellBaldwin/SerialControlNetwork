@@ -7,10 +7,12 @@
 
 */
 
-#include <PacketSerial.h>
-#include "ArdumotoController.h"
+#define XIAO
 
-ArdumotoController R5MRSMCC;
+#include <PacketSerial.h>
+#include "XiaoArdumotoController.h"
+
+XiaoArdumotoController R5MRSMCC;
 
 bool FirstTime = true;
 

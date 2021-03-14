@@ -1,7 +1,7 @@
 // ArdumotoController.h
 
-#ifndef _ARDUMOTOCONTROLLER_h
-#define _ARDUMOTOCONTROLLER_h
+#ifndef _XIAOARDUMOTOCONTROLLER_h
+#define _XIAOARDUMOTOCONTROLLER_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
 	#include "arduino.h"
@@ -23,7 +23,7 @@
 // Set to 1 if the jumper is open (Default), or set to 0 if it's closed.
 #define DC_JUMPER 1
 
-class ArdumotoController : public ArduinoControllerBase
+class XiaoArdumotoController : public ArduinoControllerBase
 {
 	private:
 		bool DisplayPresent = false;
@@ -49,8 +49,6 @@ class ArdumotoController : public ArduinoControllerBase
 		void Init(PacketSerial::PacketHandlerFunction);
 		void Update();
 };
-
-//extern ArdumotoControllerClass ArdumotoController;
 
 #endif
 
