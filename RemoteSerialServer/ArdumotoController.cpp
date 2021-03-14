@@ -26,7 +26,7 @@ constexpr byte VMotorPin = A0;
 
 void ArdumotoController::Init(PacketSerial::PacketHandlerFunction OnSerialClientMessage)
 {
-	ArduinoControllerBaseClass::Init(OnSerialClientMessage);
+	ArduinoControllerBase::Init(OnSerialClientMessage);
 	SetupArdumotoBoard();
 
 	Wire.begin();
@@ -80,7 +80,7 @@ bool ArdumotoController::TestDisplay()
 
 void ArdumotoController::Update()
 {
-	ArduinoControllerBaseClass::Update();
+	ArduinoControllerBase::Update();
 
 	//oled.clear(PAGE);
 	// Read and display battery supply voltage
@@ -119,11 +119,11 @@ void ArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload
 			// Run demo / test of local display hardware:
 			if (TestDisplay())
 			{
-				ArduinoControllerBaseClass::SendTextMessage("Local display OK");
+				ArduinoControllerBase::SendTextMessage("Local display OK");
 			}
 			else
 			{
-				ArduinoControllerBaseClass::SendTextMessage("Local display FAIL");
+				ArduinoControllerBase::SendTextMessage("Local display FAIL");
 			}
 			commandHandled = true;
 			break;
@@ -131,7 +131,7 @@ void ArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload
 		case MRSCommandTypes::TestMotors:
 		{
 			TestMotors();
-			ArduinoControllerBaseClass::SendTextMessage("Motor test complete");
+			ArduinoControllerBase::SendTextMessage("Motor test complete");
 			commandHandled = true;
 		}
 
@@ -141,7 +141,7 @@ void ArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload
 
 	if (!commandHandled)
 	{
-		ArduinoControllerBaseClass::ExecuteCommand(command, commandPayload);
+		ArduinoControllerBase::ExecuteCommand(command, commandPayload);
 	}
 }
 

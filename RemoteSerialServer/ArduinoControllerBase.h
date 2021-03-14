@@ -23,7 +23,7 @@
 
 #include "SerialClient.h"
 
-class ArduinoControllerBaseClass
+class ArduinoControllerBase
 {
 private:
 	void EchoCommandMessage(uint8_t, uint8_t*);
@@ -37,14 +37,12 @@ protected:
 	void ToggleLED();
 
  public:
-	ArduinoControllerBaseClass();
+	ArduinoControllerBase();
 	void Init(PacketSerial::PacketHandlerFunction);
 	void ProcessMessages(const uint8_t*, size_t);
 	void Update();
 
 };
-
-//extern ArduinoControllerBaseClass ArduinoControllerBase;
 
 #endif
 

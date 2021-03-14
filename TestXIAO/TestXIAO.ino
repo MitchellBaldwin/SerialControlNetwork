@@ -35,18 +35,13 @@ void loop()
 	if (FirstTime)
 	{
 		SerialUSB.println("Entered loop");
-		digitalWrite(LED_BUILTIN, HIGH);	// Pulling port HIGH turns built-in LED OFF
+		digitalWrite(LED_BUILTIN, HIGH);	// For the Xiao, pulling port HIGH turns built-in LED OFF
 		FirstTime = false;
 	}
 	
 	R5MRSMCC.Update();
 	delay(10);
 	
- //// Standard built-in LED blink test:
- // digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
- // delay(1000);              // wait for a second
- // digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
- // delay(1000);              // wait for a second
 }
 
 void OnSerialClientMessage(const uint8_t* buffer, size_t size)

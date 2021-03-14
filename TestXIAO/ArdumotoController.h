@@ -9,7 +9,8 @@
 	#include "WProgram.h"
 #endif
 
-#include "ArduinoControllerBase.h"
+#include <SerialClient.h>
+#include <ArduinoControllerBase.h>
 
 #include <wire.h>
 #include <SFE_MicroOLED.h>
@@ -22,7 +23,7 @@
 // Set to 1 if the jumper is open (Default), or set to 0 if it's closed.
 #define DC_JUMPER 1
 
-class ArdumotoController : public ArduinoControllerBaseClass
+class ArdumotoController : public ArduinoControllerBase
 {
 	private:
 		bool DisplayPresent = false;

@@ -9,8 +9,6 @@
 */
 
 #include "ArdumotoController.h"
-#include "MRSCommandTypes.h"
-#include "MRSMessageTypes.h"
 
 #define FORWARD	0
 #define REVERSE 1
@@ -18,7 +16,7 @@
 constexpr auto LeftMotor = 0;
 constexpr auto RightMotor = 1;
 
-// TODO: Update pins used on Seeeduino XIOA
+// TODO: Update pins used on Seeeduino XIAO
 const byte LMDirPin = 12;
 const byte LMPWMPin = 3;
 const byte RMDirPin = 13;
@@ -28,7 +26,7 @@ constexpr byte VMotorPin = A0;
 
 void ArdumotoController::Init(PacketSerial::PacketHandlerFunction OnSerialClientMessage)
 {
-	ArduinoControllerBaseClass::Init(OnSerialClientMessage);
+	ArduinoControllerBase::Init(OnSerialClientMessage);
 	SetupArdumotoBoard();
 
 	Wire.begin();	// Start I2C bus
@@ -96,7 +94,7 @@ void ArdumotoController::Update()
 		oled.print("VBat5: " + String(VBat5Raw));
 		oled.display();
 	}
-	ArduinoControllerBaseClass::Update();
+	ArduinoControllerBase::Update();
 }
 
 void ArdumotoController::ExecuteCommand(uint8_t)
@@ -154,7 +152,7 @@ void ArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload
 
 	if (!commandHandled)
 	{
-		ArduinoControllerBaseClass::ExecuteCommand(command, commandPayload);
+		ArduinoControllerBase::ExecuteCommand(command, commandPayload);
 	}
 }
 

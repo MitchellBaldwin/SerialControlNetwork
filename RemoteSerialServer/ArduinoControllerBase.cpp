@@ -12,12 +12,12 @@
 #include "MRSMessageTypes.h"
 
 
-ArduinoControllerBaseClass::ArduinoControllerBaseClass()
+ArduinoControllerBase::ArduinoControllerBase()
 {
 	
 }
 
-void ArduinoControllerBaseClass::Init(PacketSerial::PacketHandlerFunction OnSerialClientMessage)
+void ArduinoControllerBase::Init(PacketSerial::PacketHandlerFunction OnSerialClientMessage)
 {
 	pinMode(LED_BUILTIN, OUTPUT);
 
@@ -26,13 +26,13 @@ void ArduinoControllerBaseClass::Init(PacketSerial::PacketHandlerFunction OnSeri
 
 }
 
-void ArduinoControllerBaseClass::Update()
+void ArduinoControllerBase::Update()
 {
 	ClientConnection.Update();
 
 }
 
-void ArduinoControllerBaseClass::ProcessMessages(const uint8_t* buffer, size_t size)
+void ArduinoControllerBase::ProcessMessages(const uint8_t* buffer, size_t size)
 {
 	uint8_t* commandPayload;
 
@@ -46,7 +46,7 @@ void ArduinoControllerBaseClass::ProcessMessages(const uint8_t* buffer, size_t s
 
 }
 
-void ArduinoControllerBaseClass::ExecuteCommand(uint8_t command)
+void ArduinoControllerBase::ExecuteCommand(uint8_t command)
 {
 	switch (command)
 	{
@@ -65,7 +65,7 @@ void ArduinoControllerBaseClass::ExecuteCommand(uint8_t command)
 
 }
 
-void ArduinoControllerBaseClass::ExecuteCommand(uint8_t command, uint8_t *commandPayload)
+void ArduinoControllerBase::ExecuteCommand(uint8_t command, uint8_t *commandPayload)
 {
 	switch (command)
 	{
@@ -110,7 +110,7 @@ void ArduinoControllerBaseClass::ExecuteCommand(uint8_t command, uint8_t *comman
 
 }
 
-void ArduinoControllerBaseClass::EchoCommandMessage(uint8_t command, uint8_t *commandPayload)
+void ArduinoControllerBase::EchoCommandMessage(uint8_t command, uint8_t *commandPayload)
 {
 	ClientConnection.outPacket[0] = command;
 	for (int i = 0; i < ClientConnection.PACKET_PAYLOAD_SIZE; ++i)
@@ -121,7 +121,7 @@ void ArduinoControllerBaseClass::EchoCommandMessage(uint8_t command, uint8_t *co
 	ClientConnection.SendPacket();
 }
 
-void ArduinoControllerBaseClass::SendTextMessage(String msg) 
+void ArduinoControllerBase::SendTextMessage(String msg) 
 {
 	ClientConnection.outPacket[0] = MRSMessageTypes::MRSTextMessage;
 	for (int i = 0; i < ClientConnection.PACKET_PAYLOAD_SIZE; ++i) 
@@ -138,7 +138,7 @@ void ArduinoControllerBaseClass::SendTextMessage(String msg)
 	ClientConnection.SendPacket();
 }
 
-bool ArduinoControllerBaseClass::TestLocalDisplay()
+bool ArduinoControllerBase::TestLocalDisplay()
 {
 	return true;
 	//if (LocalDisplay.RunFont0Demo())
@@ -151,13 +151,13 @@ bool ArduinoControllerBaseClass::TestLocalDisplay()
 	//}
 }
 
-void ArduinoControllerBaseClass::GetStatusReport()
+void ArduinoControllerBase::GetStatusReport()
 {
 	ClientConnection.outPacket[0] = MRSMessageTypes::MRSStatusPacket;
 
 }
 
-void ArduinoControllerBaseClass::ToggleLED()
+void ArduinoControllerBase::ToggleLED()
 {
 	// DEBUG: Toggle system LED to verify receipt of 0xF0 command message
 	if (digitalRead(LED_BUILTIN))

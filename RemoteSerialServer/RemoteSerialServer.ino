@@ -8,6 +8,8 @@ the main (INO) programs implementing the MRSMCC, MRSRC, etc.
 
 */
 
+#include <SerialClient.h>
+#include <ArduinoControllerBase.h>
 #include "ArdumotoController.h"
 //#include "ArduinoControllerBase.h"
 
