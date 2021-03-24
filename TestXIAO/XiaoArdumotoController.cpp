@@ -125,6 +125,22 @@ void XiaoArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPay
 		}
 		break;
 
+		case MRSCommandTypes::DSMCUDriveSettings:
+		{
+			int16_t speed = commandPayload[0x01] * 256 + commandPayload[0x00];
+			byte direction = FORWARD;
+			if (speed < 0)
+			{
+				direction = REVERSE;
+				speed = abs(speed);
+			}
+			SetMotor(LeftMotor, direction, speed);
+			SetMotor(RightMotor, direction, speed);
+
+			commandHandled = true;
+		}
+		break;
+		
 		case MRSCommandTypes::TestLocalDisplay:
 			// Run demo / test of local display hardware:
 			if (TestDisplay())

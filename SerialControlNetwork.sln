@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecoverProMicro", "RecoverP
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Rover5ArdProArdumoto", "Rover5ArdProArdumoto\Rover5ArdProArdumoto.vcxproj", "{037CA9D5-616B-40EA-AC2A-8DE6FF85A3E1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructByteConverter", "ByteConverter\StructByteConverter.csproj", "{33C69935-2969-4ABE-8D25-784AB009CED3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,14 @@ Global
 		{037CA9D5-616B-40EA-AC2A-8DE6FF85A3E1}.Release|Any CPU.ActiveCfg = Release|Win32
 		{037CA9D5-616B-40EA-AC2A-8DE6FF85A3E1}.Release|x86.ActiveCfg = Release|Win32
 		{037CA9D5-616B-40EA-AC2A-8DE6FF85A3E1}.Release|x86.Build.0 = Release|Win32
+		{33C69935-2969-4ABE-8D25-784AB009CED3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33C69935-2969-4ABE-8D25-784AB009CED3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33C69935-2969-4ABE-8D25-784AB009CED3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{33C69935-2969-4ABE-8D25-784AB009CED3}.Debug|x86.Build.0 = Debug|Any CPU
+		{33C69935-2969-4ABE-8D25-784AB009CED3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33C69935-2969-4ABE-8D25-784AB009CED3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33C69935-2969-4ABE-8D25-784AB009CED3}.Release|x86.ActiveCfg = Release|Any CPU
+		{33C69935-2969-4ABE-8D25-784AB009CED3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

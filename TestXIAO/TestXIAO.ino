@@ -17,30 +17,34 @@ XiaoArdumotoController R5MRSMCC;
 bool FirstTime = true;
 
 void setup() {
-  // Should not be needed; handled in ArduinoControllerBase
-  //pinMode(LED_BUILTIN, OUTPUT);	// Initialize digital pin 13 as an output.
 	
 	// Use USB serial connection for debugger:
-	SerialUSB.begin(115200);	
+	SerialUSB.begin(115200);
+	// Wait for USB serial port (for ATmega32u4 or other board / chips with a dedicated USB serial port:
+	while (!SerialUSB);	
 	SerialUSB.println("\r\nConnected...");
 	
-	// Use hardware UART for COBS (PacketSerial) serial communication:
-	Serial1.begin(115200);	
+	// Initialize the Master Communications Controller (MCC), or in this test case, the Drive System MCU 
+	//(DSMCU) subsystem in the form of a Seeeduino Xiao, Ardumoto motor controller shield and SF uOLED
+	// This subsystem uses the Xiao hardware UART for COBS (PacketSerial) serial communication with the host:
 	R5MRSMCC.Init(&OnSerialClientMessage);
+	digitalWrite(LED_BUILTIN, HIGH);	// For the Xiao, pulling port HIGH turns built-in LED OFF
 
+	// Debug / development trace code:
 	R5MRSMCC.ScanI2CBus();
-
+	// End of debug / development trace code block
 }
 
 void loop() 
 {
+	// Debug / development trace code:
 	if (FirstTime)
 	{
 		SerialUSB.println("Entered loop");
-		digitalWrite(LED_BUILTIN, HIGH);	// For the Xiao, pulling port HIGH turns built-in LED OFF
 		FirstTime = false;
 	}
-	
+	// End of debug / development trace code block
+
 	R5MRSMCC.Update();
 	delay(10);
 	

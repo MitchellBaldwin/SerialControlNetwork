@@ -14,15 +14,15 @@
         // Command codes:
 
         // 0x10 - ox1F : Request report commands
-        GetMRSStatus = 0x00,
+        GetMRSStatus = 0x10,
 
-        GetDSMCUStatus = 0x04,
+        GetDSMCUStatus = 0x14,
 
         // 0x20 - 0x2F : Power System commands
 
         // 0x40 - ox4F : Drive Ssytem MCU commands
-        DSMCUDriveSettings = 0x40,
-        DSMCUDriveConfiguration = 0x41,
+        DSMCUSetMotors = 0x40,
+        DSMCUSetDriveConfiguration = 0x41,
 
 
 

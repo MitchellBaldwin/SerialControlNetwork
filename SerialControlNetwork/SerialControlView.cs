@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -13,7 +14,28 @@ namespace SerialControlNetwork
     public partial class SerialControlView : Form
     {
         //PacketSerialPortController PSPC = new PacketSerialPortController();
-        
+        private DSMCUCommand LastCommandedMotorSettings = new DSMCUCommand
+        {
+            Speed = 0x0000,
+            TurnRate = 0x0000,
+            STThetaXY = 1571,   // 90° in mrad
+            STThetaZX = 1571    // 90° in mrad
+        };
+        private DSMCUCommand MinimumCommandedMotorSettings = new DSMCUCommand
+        {
+            Speed = -127,
+            TurnRate = -1571,   // -90°/s in mrad/s
+            STThetaXY = 0x0000, // 0° in mrad
+            STThetaZX = 0x0000  // 0° in mrad
+        };
+        private DSMCUCommand MaximumCommandedMotorSettings = new DSMCUCommand
+        {
+            Speed = 127,
+            TurnRate = 1571,    // 90°/s in mrad/s
+            STThetaXY = 3142,   // 180° in mrad
+            STThetaZX = 3142    // 180° in mrad
+        };
+
         public SerialControlView()
         {
             InitializeComponent();
@@ -35,7 +57,37 @@ namespace SerialControlNetwork
 
         }
 
-        
+        private void SerialControlView_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Properties.Settings.Default.LastMRSCOMPort = MRSPSP.GetComPortName();
+            Properties.Settings.Default.LastMRSRCComPort = MRSRCPSP.GetComPortName();
+            Properties.Settings.Default.Save();
+        }
+
+        public void UpdateDisplays(byte[] buffer)
+        {
+            StatusDisplayLabel.Text = buffer[buffer.Length-1].ToString("X2");
+
+            if (buffer[0] == (byte)MRSMessageType.MRSTextMessage)
+            {
+                char[] msg = new char[MRSPSP.PSPC.PacketPayloadSize];
+                for (int i = 1; i < MRSPSP.PSPC.PacketPayloadSize; ++i)
+                {
+                    msg[i - 1] = (char)buffer[i];
+                }
+                if (MessageTextBox.Lines.Length > 0)
+                {
+                    MessageTextBox.AppendText(Environment.NewLine + new string(msg));
+                }
+                else
+                {
+                    MessageTextBox.AppendText(new string(msg));
+                }
+
+            }
+        }
+
+        #region MRS control handlers
         // MRS Controls *******************************************************************************************************
         private void TestMRSComsButton_Click(object sender, EventArgs e)
         {
@@ -72,7 +124,9 @@ namespace SerialControlNetwork
             MRSPSP.SendCommandMessage((byte)MRSMessageType.TestMotors, dummy);
         }
 
+        #endregion
 
+        #region MRS Remote Controller control handlers
         // MRS Remote Controller Controls *************************************************************************************
         private void TestMRSRCComsButton_Click(object sender, EventArgs e)
         {
@@ -87,35 +141,110 @@ namespace SerialControlNetwork
             MRSRCPSP.SendCommandMessage((byte)MRSMessageType.TestPacketTransfer, dummy);
         }
 
-        private void SerialControlView_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Properties.Settings.Default.LastMRSCOMPort = MRSPSP.GetComPortName();
-            Properties.Settings.Default.LastMRSRCComPort = MRSRCPSP.GetComPortName();
-            Properties.Settings.Default.Save();
-        }
+        #endregion
 
-        public void UpdateDisplays(byte[] buffer)
+        private void ForwardButton_Click(object sender, EventArgs e)
         {
-            StatusDisplayLabel.Text = buffer[buffer.Length-1].ToString("X2");
+            short speedDelta = (short)SpeedDeltaNumericUpDown.Value;
 
-            if (buffer[0] == (byte)MRSMessageType.MRSTextMessage)
+            short speed = LastCommandedMotorSettings.Speed += speedDelta;
+            if (speed > MaximumCommandedMotorSettings.Speed)
             {
-                char[] msg = new char[MRSPSP.PSPC.PacketPayloadSize];
-                for (int i = 1; i < MRSPSP.PSPC.PacketPayloadSize; ++i)
-                {
-                    msg[i - 1] = (char)buffer[i];
-                }
-                if (MessageTextBox.Lines.Length > 0)
-                {
-                    MessageTextBox.AppendText(Environment.NewLine + new string(msg));
-                }
-                else
-                {
-                    MessageTextBox.AppendText(new string(msg));
-                }
-
+                speed = MaximumCommandedMotorSettings.Speed;
             }
+
+            DSMCUCommand command = new DSMCUCommand
+            {
+                Speed = speed,
+                TurnRate = LastCommandedMotorSettings.TurnRate,
+                STThetaXY = LastCommandedMotorSettings.STThetaXY,
+                STThetaZX = LastCommandedMotorSettings.STThetaZX
+            };
+            byte[] payloadByteArray = StructByteConverter.StructByteConverter.getByteArray(command);
+            MRSPSP.SendCommandMessage(command: (byte)MRSMessageType.DSMCUSetMotors, buffer: payloadByteArray);
+
+            LastCommandedMotorSettings = command;
+
+            // Test conversion back to DSMCUCommand struct:
+            //DSMCUCommand testCommand = StructByteConverter.StructByteConverter.fromBytes<DSMCUCommand>(payloadByteArray);
         }
 
+        private void BackwardButton_Click(object sender, EventArgs e)
+        {
+            short speedDelta = (short)SpeedDeltaNumericUpDown.Value;
+
+            short speed = LastCommandedMotorSettings.Speed -= speedDelta;
+            if (speed < MinimumCommandedMotorSettings.Speed)
+            {
+                speed = MinimumCommandedMotorSettings.Speed;
+            }
+
+            DSMCUCommand command = new DSMCUCommand
+            {
+                Speed = speed,
+                TurnRate = LastCommandedMotorSettings.TurnRate,
+                STThetaXY = LastCommandedMotorSettings.STThetaXY,
+                STThetaZX = LastCommandedMotorSettings.STThetaZX
+            };
+            byte[] payloadByteArray = StructByteConverter.StructByteConverter.getByteArray(command);
+            MRSPSP.SendCommandMessage(command: (byte)MRSMessageType.DSMCUSetMotors, buffer: payloadByteArray);
+
+            LastCommandedMotorSettings = command;
+        }
+
+        private void StopButton_Click(object sender, EventArgs e)
+        {
+            DSMCUCommand command = new DSMCUCommand
+            {
+                Speed = 0x0000,
+                TurnRate = 0x0000,
+                STThetaXY = LastCommandedMotorSettings.STThetaXY,
+                STThetaZX = LastCommandedMotorSettings.STThetaZX
+            };
+            byte[] payloadByteArray = StructByteConverter.StructByteConverter.getByteArray(command);
+            MRSPSP.SendCommandMessage(command: (byte)MRSMessageType.DSMCUSetMotors, buffer: payloadByteArray);
+
+            LastCommandedMotorSettings = command;
+        }
+
+        private void LeftButton_Click(object sender, EventArgs e)
+        {
+            // Left turn is positive if x-axis is straight ahead and y-axis is directed to the left of the MRS chassis
+            short turnRateDelta = (short)TurnRateDeltaNumericUpDown.Value;
+
+            short turnRate = LastCommandedMotorSettings.TurnRate += turnRateDelta;
+            if (turnRate > MaximumCommandedMotorSettings.TurnRate)
+            {
+                turnRate = MaximumCommandedMotorSettings.TurnRate;
+            }
+
+            DSMCUCommand command = LastCommandedMotorSettings;
+            command.TurnRate = turnRate;
+
+            byte[] payloadByteArray = StructByteConverter.StructByteConverter.getByteArray(command);
+            MRSPSP.SendCommandMessage(command: (byte)MRSMessageType.DSMCUSetMotors, buffer: payloadByteArray);
+
+            LastCommandedMotorSettings = command;
+        }
+
+        private void RightButton_Click(object sender, EventArgs e)
+        {
+            // Right turn is negative if x-axis is straight ahead and y-axis is directed to the left of the MRS chassis
+            short turnRateDelta = (short)TurnRateDeltaNumericUpDown.Value;
+
+            short turnRate = LastCommandedMotorSettings.TurnRate -= turnRateDelta;
+            if (turnRate < MinimumCommandedMotorSettings.TurnRate)
+            {
+                turnRate = MinimumCommandedMotorSettings.TurnRate;
+            }
+
+            DSMCUCommand command = LastCommandedMotorSettings;
+            command.TurnRate = turnRate;
+
+            byte[] payloadByteArray = StructByteConverter.StructByteConverter.getByteArray(command);
+            MRSPSP.SendCommandMessage(command: (byte)MRSMessageType.DSMCUSetMotors, buffer: payloadByteArray);
+
+            LastCommandedMotorSettings = command;
+        }
     }
 }
