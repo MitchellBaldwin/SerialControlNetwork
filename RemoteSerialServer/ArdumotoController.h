@@ -22,7 +22,7 @@
 // Set to 1 if the jumper is open (Default), or set to 0 if it's closed.
 #define DC_JUMPER 1
 
-class XiaoArdumotoController : public ArduinoControllerBase
+class ArdumotoController : public ArduinoControllerBase
 {
 	private:
 		void SetupArdumotoBoard();
@@ -33,7 +33,7 @@ class XiaoArdumotoController : public ArduinoControllerBase
 
 	protected:
 		MicroOLED oled = MicroOLED(PIN_RESET, DC_JUMPER);
-		void TestMotors();
+		bool TestMotors();
 		bool TestDisplay();
 		virtual void ExecuteCommand(uint8_t);
 		virtual void ExecuteCommand(uint8_t, uint8_t*);

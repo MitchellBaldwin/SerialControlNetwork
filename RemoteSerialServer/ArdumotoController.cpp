@@ -8,8 +8,6 @@
 */
 
 #include "ArdumotoController.h"
-#include "MRSCommandTypes.h"
-#include "MRSMessageTypes.h"
 
 #define FORWARD	0
 #define REVERSE 1
@@ -24,9 +22,9 @@ const byte RMPWMPin = 11;
 
 constexpr byte VMotorPin = A0;
 
-void XiaoArdumotoController::Init(PacketSerial::PacketHandlerFunction OnSerialClientMessage)
+void ArdumotoController::Init(PacketSerial::PacketHandlerFunction OnSerialClientMessage)
 {
-	ArduinoControllerBase::Init(OnSerialClientMessage);
+	ArduinoControllerBase::Init(SerialClient::SerialOverUSB, OnSerialClientMessage);
 	SetupArdumotoBoard();
 
 	Wire.begin();
@@ -40,7 +38,7 @@ void XiaoArdumotoController::Init(PacketSerial::PacketHandlerFunction OnSerialCl
 
 }
 
-void XiaoArdumotoController::TestMotors()
+bool ArdumotoController::TestMotors()
 {
 	SetMotor(LeftMotor, FORWARD, 127);
 	delay(2000);
@@ -58,9 +56,10 @@ void XiaoArdumotoController::TestMotors()
 	delay(2000);
 	SetMotor(RightMotor, 0, 0);
 	//delay(500);
+	return true;
 }
 
-bool XiaoArdumotoController::TestDisplay()
+bool ArdumotoController::TestDisplay()
 {
 	Wire.beginTransmission(I2C_ADDRESS_SA0_1);
 	if (Wire.endTransmission(0) == 0)
@@ -78,11 +77,10 @@ bool XiaoArdumotoController::TestDisplay()
 	return DisplayPresent;
 }
 
-void XiaoArdumotoController::Update()
+void ArdumotoController::Update()
 {
 	ArduinoControllerBase::Update();
 
-	//oled.clear(PAGE);
 	// Read and display battery supply voltage
 	uint16_t VBat5Raw = analogRead(VMotorPin);
 	oled.setCursor(0, 0);
@@ -91,12 +89,12 @@ void XiaoArdumotoController::Update()
 
 }
 
-void XiaoArdumotoController::ExecuteCommand(uint8_t)
+void ArdumotoController::ExecuteCommand(uint8_t)
 {
 	
 }
 
-void XiaoArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload) //: EcecuteCommand(command, commandPayload)
+void ArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload) //: EcecuteCommand(command, commandPayload)
 {
 	bool commandHandled = false;
 	
@@ -110,6 +108,52 @@ void XiaoArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPay
 			oled.print(msg);
 			oled.display();
 			SendTextMessage("This is a test...");
+
+			commandHandled = true;
+		}
+		break;
+
+		case MRSCommandTypes::DSMCUSetMotors:
+		{
+			int16_t speed = (((int16_t)commandPayload[0x01]) << 8) + (int16_t)(commandPayload[0x00]);
+			// This works, too:
+			//byte raw[2] = { commandPayload[0x00], commandPayload[0x01] };
+			//int16_t speed = *((int16_t*)raw);
+
+			byte direction = FORWARD;
+			if (speed < 0)
+			{
+				direction = REVERSE;
+				speed = abs(speed);
+			}
+			SetMotor(LeftMotor, direction, speed);
+			SetMotor(RightMotor, direction, speed);
+
+			commandHandled = true;
+		}
+		break;
+
+		case MRSCommandTypes::RunSystemDiagnostics:
+		{
+			// Run demo / test of local display hardware:
+			if (TestDisplay())
+			{
+				ArduinoControllerBase::SendTextMessage("Local display OK");
+			}
+			else
+			{
+				ArduinoControllerBase::SendTextMessage("Local display FAIL");
+			}
+
+			// Run demo / test of local display hardware:
+			if (TestMotors())
+			{
+				ArduinoControllerBase::SendTextMessage("Motor test complete");
+			}
+			else
+			{
+				ArduinoControllerBase::SendTextMessage("Motor test FAIL");
+			}
 
 			commandHandled = true;
 		}
@@ -145,7 +189,7 @@ void XiaoArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPay
 	}
 }
 
-void XiaoArdumotoController::SetupArdumotoBoard()
+void ArdumotoController::SetupArdumotoBoard()
 {
 	pinMode(LMDirPin, OUTPUT);
 	pinMode(LMPWMPin, OUTPUT);
@@ -159,18 +203,18 @@ void XiaoArdumotoController::SetupArdumotoBoard()
 
 }
 
-void XiaoArdumotoController::StopMotor(byte motor)
+void ArdumotoController::StopMotor(byte motor)
 {
 	SetMotor(motor, 0, 0);
 }
 
-void XiaoArdumotoController::StopBothMotors()
+void ArdumotoController::StopBothMotors()
 {
 	SetMotor(LeftMotor, 0, 0);
 	SetMotor(RightMotor, 0, 0);
 }
 
-void XiaoArdumotoController::SetMotor(byte motor, byte dir, byte speed)
+void ArdumotoController::SetMotor(byte motor, byte dir, byte speed)
 {
 	switch (motor)
 	{

@@ -125,9 +125,13 @@ void XiaoArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPay
 		}
 		break;
 
-		case MRSCommandTypes::DSMCUDriveSettings:
+		case MRSCommandTypes::DSMCUSetMotors:
 		{
-			int16_t speed = commandPayload[0x01] * 256 + commandPayload[0x00];
+			int16_t speed = (((int16_t)commandPayload[0x01]) << 8) + (int16_t)(commandPayload[0x00]);
+			// This works, too:
+			//byte raw[2] = { commandPayload[0x00], commandPayload[0x01] };
+			//int16_t speed = *((int16_t*)raw);
+
 			byte direction = FORWARD;
 			if (speed < 0)
 			{
@@ -141,6 +145,20 @@ void XiaoArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPay
 		}
 		break;
 		
+		case MRSCommandTypes::RunSystemDiagnostics:
+			// Run demo / test of local display hardware:
+			if (TestDisplay())
+			{
+				SendTextMessage("Local display OK");
+			}
+			else
+			{
+				SendTextMessage("Local display FAIL");
+			}
+			ScanI2CBus();
+			commandHandled = true;
+			break;
+
 		case MRSCommandTypes::TestLocalDisplay:
 			// Run demo / test of local display hardware:
 			if (TestDisplay())

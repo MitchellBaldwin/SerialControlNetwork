@@ -115,7 +115,7 @@ namespace SerialControlNetwork
         private void MRSSYSDiagnosticsButton_Click(object sender, EventArgs e)
         {
             byte[] dummy = { 0x00 };
-            MRSPSP.SendCommandMessage((byte)MRSMessageType.TestLocalDisplay, dummy);
+            MRSPSP.SendCommandMessage((byte)MRSMessageType.RunSystemDiagnostics, dummy);
         }
 
         private void MRSTestMotorsButton_Click(object sender, EventArgs e)

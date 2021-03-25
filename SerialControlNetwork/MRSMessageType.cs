@@ -30,6 +30,7 @@
 
 
         // 0xF0 - oxFF : Diagnostic / test commands
+        RunSystemDiagnostics = 0xF0,        // Run standard system diagnostics and report
 
         ToggleBuiltInLED = 0xF8,            // Debug / test: Toggle diagnostic LED ON/OFF
         TestPacketTransfer = 0xF9,          // Debug / test: Echo command package payload as an MRSStatusReport message
