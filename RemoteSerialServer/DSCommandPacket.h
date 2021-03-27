@@ -8,5 +8,5 @@ union DSCommandPacket
 		uint16_t STThetaXY;
 		uint16_t STThetaZX;
 	} fields;
-	byte packet[28];
+	byte packet[28];	// TODO: Change this to use globally defined length of command packet
 };

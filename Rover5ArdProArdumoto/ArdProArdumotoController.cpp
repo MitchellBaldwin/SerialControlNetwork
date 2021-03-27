@@ -108,7 +108,7 @@ void ArdProArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandP
 	
 	switch (command)
 	{
-		case MRSMessageTypes::MRSTextMessage:
+		case ArduinoControllerPacketTypes::MRSTextMessage:
 		{
 			// Display the incoming text message locally (and/or log it):
 			if (DisplayPresent)
@@ -125,7 +125,7 @@ void ArdProArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandP
 		}
 		break;
 
-		case MRSCommandTypes::TestLocalDisplay:
+		case ArduinoControllerPacketTypes::TestLocalDisplay:
 			// Run demo / test of local display hardware:
 			if (TestDisplay())
 			{
@@ -139,7 +139,7 @@ void ArdProArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandP
 			commandHandled = true;
 			break;
 
-		case MRSCommandTypes::TestMotors:
+		case ArduinoControllerPacketTypes::TestMotors:
 		{
 			TestMotors();
 			SendTextMessage("Motor test complete");

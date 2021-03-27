@@ -101,7 +101,7 @@ void ArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload
 	
 	switch (command)
 	{
-		case MRSMessageTypes::MRSTextMessage:
+		case ArduinoControllerPacketTypes::MRSTextMessage:
 		{
 			// Display the incoming text message locally (and/or log it):
 			String msg = String((char*)commandPayload);
@@ -114,7 +114,7 @@ void ArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload
 		}
 		break;
 
-		case MRSCommandTypes::DSMCUSetMotors:
+		case ArduinoControllerPacketTypes::DSMCUSetMotors:
 		{
 			DSCommandPacket* DSCP = (DSCommandPacket*)commandPayload;
 			int16_t speed = DSCP->fields.Speed;
@@ -148,7 +148,7 @@ void ArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload
 		}
 		break;
 
-		case MRSCommandTypes::RunSystemDiagnostics:
+		case ArduinoControllerPacketTypes::RunSystemDiagnostics:
 		{
 			// Run demo / test of local display hardware:
 			if (TestDisplay())
@@ -174,7 +174,7 @@ void ArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload
 		}
 		break;
 
-		case MRSCommandTypes::TestLocalDisplay:
+		case ArduinoControllerPacketTypes::TestLocalDisplay:
 		{
 			// Run demo / test of local display hardware:
 			if (TestDisplay())
@@ -189,7 +189,7 @@ void ArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload
 		}
 			break;
 
-		case MRSCommandTypes::TestMotors:
+		case ArduinoControllerPacketTypes::TestMotors:
 		{
 			TestMotors();
 			ArduinoControllerBase::SendTextMessage("Motor test complete");

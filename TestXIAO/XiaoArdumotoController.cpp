@@ -108,7 +108,7 @@ void XiaoArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPay
 	
 	switch (command)
 	{
-		case MRSMessageTypes::MRSTextMessage:
+		case ArduinoControllerPacketTypes::MRSTextMessage:
 		{
 			// Display the incoming text message locally (and/or log it):
 			if (DisplayPresent)
@@ -125,7 +125,7 @@ void XiaoArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPay
 		}
 		break;
 
-		case MRSCommandTypes::DSMCUSetMotors:
+		case ArduinoControllerPacketTypes::DSMCUSetMotors:
 		{
 			int16_t speed = (((int16_t)commandPayload[0x01]) << 8) + (int16_t)(commandPayload[0x00]);
 			// This works, too:
@@ -145,7 +145,7 @@ void XiaoArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPay
 		}
 		break;
 		
-		case MRSCommandTypes::RunSystemDiagnostics:
+		case ArduinoControllerPacketTypes::RunSystemDiagnostics:
 			// Run demo / test of local display hardware:
 			if (TestDisplay())
 			{
@@ -159,7 +159,7 @@ void XiaoArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPay
 			commandHandled = true;
 			break;
 
-		case MRSCommandTypes::TestLocalDisplay:
+		case ArduinoControllerPacketTypes::TestLocalDisplay:
 			// Run demo / test of local display hardware:
 			if (TestDisplay())
 			{
@@ -173,7 +173,7 @@ void XiaoArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPay
 			commandHandled = true;
 			break;
 
-		case MRSCommandTypes::TestMotors:
+		case ArduinoControllerPacketTypes::TestMotors:
 		{
 			TestMotors();
 			SendTextMessage("Motor test complete");
