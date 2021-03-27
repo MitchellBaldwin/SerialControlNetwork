@@ -8,6 +8,7 @@
 */
 
 #include "ArdumotoController.h"
+#include "DSCommandPacket.h"
 
 #define FORWARD	0
 #define REVERSE 1
@@ -115,10 +116,24 @@ void ArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload
 
 		case MRSCommandTypes::DSMCUSetMotors:
 		{
-			int16_t speed = (((int16_t)commandPayload[0x01]) << 8) + (int16_t)(commandPayload[0x00]);
+			DSCommandPacket* DSCP = (DSCommandPacket*)commandPayload;
+			int16_t speed = DSCP->fields.Speed;
+			// This works:
+			//DSCommandPacket DSCP;
+			//for (int i = 0; i < sizeof(commandPayload); ++i)
+			//{
+			//	DSCP.packet[i] = commandPayload[i];
+			//}
+			//int16_t speed = DSCP.fields.Speed;
+			// So does this:
+			//int16_t speed = (((int16_t)commandPayload[0x01]) << 8) + (int16_t)(commandPayload[0x00]);
 			// This works, too:
 			//byte raw[2] = { commandPayload[0x00], commandPayload[0x01] };
 			//int16_t speed = *((int16_t*)raw);
+
+			oled.setCursor(0, 20);
+			oled.print("Speed: " + String(speed));
+			oled.display();
 
 			byte direction = FORWARD;
 			if (speed < 0)
@@ -160,6 +175,7 @@ void ArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload
 		break;
 
 		case MRSCommandTypes::TestLocalDisplay:
+		{
 			// Run demo / test of local display hardware:
 			if (TestDisplay())
 			{
@@ -170,6 +186,7 @@ void ArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload
 				ArduinoControllerBase::SendTextMessage("Local display FAIL");
 			}
 			commandHandled = true;
+		}
 			break;
 
 		case MRSCommandTypes::TestMotors:
@@ -178,6 +195,7 @@ void ArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload
 			ArduinoControllerBase::SendTextMessage("Motor test complete");
 			commandHandled = true;
 		}
+		break;
 
 		default:
 			break;

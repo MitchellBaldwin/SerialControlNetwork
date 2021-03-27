@@ -24,6 +24,9 @@
     <ClInclude Include="ArdumotoController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DSCommandPacket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ArdumotoController.cpp">
