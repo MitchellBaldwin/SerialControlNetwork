@@ -8,7 +8,7 @@
 */
 
 #include "ArdumotoController.h"
-#include "DSCommandPacket.h"
+#include "DriveSystemPacketDefs.h"
 
 #define FORWARD	0
 #define REVERSE 1
@@ -34,7 +34,8 @@ void ArdumotoController::Init(PacketSerial::PacketHandlerFunction OnSerialClient
 	{
 		oled.begin();			// Initialize the OLED
 		oled.clear(PAGE); // Clear the display's internal memory
-		oled.display();		// Display what's in the buffer (splashscreen)
+		oled.display();	  // Display what's in the buffer (splashscreen)
+		DisplayPresent = true;
 	}
 
 }
@@ -65,9 +66,10 @@ bool ArdumotoController::TestDisplay()
 	Wire.beginTransmission(I2C_ADDRESS_SA0_1);
 	if (Wire.endTransmission(0) == 0)
 	{
-		uint8_t fontHeight = oled.getFontHeight();
+		uint8_t screenWidth = oled.getLCDWidth();
+		uint8_t screenHeight = oled.getLCDHeight();
 		oled.setCursor(0, 10);
-		oled.print("Font h: " + String(fontHeight));
+		oled.print("WxH: " + String(screenWidth) + "x" + String(screenHeight));
 		oled.display();
 		DisplayPresent = true;
 	}
@@ -83,7 +85,7 @@ void ArdumotoController::Update()
 	ArduinoControllerBase::Update();
 
 	// Read and display battery supply voltage
-	uint16_t VBat5Raw = analogRead(VMotorPin);
+	VBat5Raw = analogRead(VMotorPin);
 	oled.setCursor(0, 0);
 	oled.print("VBat5: " + String(VBat5Raw));
 	oled.display();
@@ -98,7 +100,12 @@ void ArdumotoController::ExecuteCommand(uint8_t)
 void ArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload) //: EcecuteCommand(command, commandPayload)
 {
 	bool commandHandled = false;
-	
+	char CmdReportText[10];
+	sprintf(CmdReportText, "CMD: %2X", command);
+	oled.setCursor(0, 40);
+	oled.print(CmdReportText);
+	oled.display();
+
 	switch (command)
 	{
 		case ArduinoControllerPacketTypes::MRSTextMessage:
@@ -117,19 +124,33 @@ void ArdumotoController::ExecuteCommand(uint8_t command, uint8_t *commandPayload
 		case ArduinoControllerPacketTypes::DSMCUSetMotors:
 		{
 			DSCommandPacket* DSCP = (DSCommandPacket*)commandPayload;
-			int16_t speed = DSCP->fields.Speed;
+			int16_t speed = DSCP->Kinematics.Speed;
 			// This works:
 			//DSCommandPacket DSCP;
 			//for (int i = 0; i < sizeof(commandPayload); ++i)
 			//{
 			//	DSCP.packet[i] = commandPayload[i];
 			//}
-			//int16_t speed = DSCP.fields.Speed;
+			//int16_t speed = DSCP.Kinematics.Speed;
 			// So does this:
 			//int16_t speed = (((int16_t)commandPayload[0x01]) << 8) + (int16_t)(commandPayload[0x00]);
 			// This works, too:
 			//byte raw[2] = { commandPayload[0x00], commandPayload[0x01] };
 			//int16_t speed = *((int16_t*)raw);
+
+			// Build and send Drive System Status Packet:
+			DSStatusPacket DSSP;
+			DSSP.Measurements.VSupply = VBat5Raw;
+			DSSP.Measurements.LMotorCurrent = 0;
+			DSSP.Measurements.RMotorCurrent = 0;
+			DSSP.Measurements.LActuatorSpeed = speed;
+			DSSP.Measurements.RActuatorSpeed = speed;
+			ClientConnection.outPacket[0] = ArduinoControllerPacketTypes::DSMCUStatusPacket;
+			for (int i = 0; i < sizeof(DSSP); ++i)
+			{
+				ClientConnection.outPacketPayload[i] = *((byte*)(&DSSP) + i);
+			}
+			ClientConnection.SendPacket();
 
 			oled.setCursor(0, 20);
 			oled.print("Speed: " + String(speed));

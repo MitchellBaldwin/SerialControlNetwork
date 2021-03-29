@@ -115,8 +115,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ArduinoControllerDefs.h" />
     <ClInclude Include="ArdumotoController.h" />
-    <ClInclude Include="DSCommandPacket.h" />
+    <ClInclude Include="DriveSystemPacketDefs.h" />
     <ClInclude Include="__vm\.RemoteSerialServer.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>

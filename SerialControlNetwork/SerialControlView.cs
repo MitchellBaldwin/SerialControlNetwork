@@ -68,7 +68,14 @@ namespace SerialControlNetwork
         {
             StatusDisplayLabel.Text = buffer[buffer.Length-1].ToString("X2");
 
-            if (buffer[0] == (byte)MRSMessageType.MRSTextMessage)
+            byte commandByte = buffer[0];
+            byte[] packetPayload = new byte[MRSPSP.PSPC.PacketPayloadSize];
+            for (int i=1; i< MRSPSP.PSPC.PacketPayloadSize; ++i)
+            {
+                packetPayload[i-1] = buffer[i];
+            }
+
+            if (commandByte == (byte)MRSMessageType.MRSTextMessage)
             {
                 char[] msg = new char[MRSPSP.PSPC.PacketPayloadSize];
                 for (int i = 1; i < MRSPSP.PSPC.PacketPayloadSize; ++i)
@@ -84,6 +91,11 @@ namespace SerialControlNetwork
                     MessageTextBox.AppendText(new string(msg));
                 }
 
+            }
+            else if (commandByte == (byte)MRSMessageType.DSMCUStatusPacket)
+            {
+                DSMCUStatus dSMCUStatus = StructByteConverter.StructByteConverter.fromBytes<DSMCUStatus>(packetPayload);
+                VBatt5DisplayLabel.Text = dSMCUStatus.VSupply.ToString("0000");
             }
         }
 

@@ -30,6 +30,7 @@ class ArdumotoController : public ArduinoControllerBase
 		void StopBothMotors();
 		void SetMotor(byte, byte, byte);
 		bool DisplayPresent = false;
+		uint16_t VBat5Raw;
 
 	protected:
 		MicroOLED oled = MicroOLED(PIN_RESET, DC_JUMPER);

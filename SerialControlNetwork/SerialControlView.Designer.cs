@@ -34,11 +34,17 @@
             this.TestMRSRCComsButton = new System.Windows.Forms.Button();
             this.GetMRSStatusButton = new System.Windows.Forms.Button();
             this.TestMRSComsButton = new System.Windows.Forms.Button();
+            this.MRSRCPSP = new SerialControlNetwork.PacketSerialPortPanel();
+            this.MRSPSP = new SerialControlNetwork.PacketSerialPortPanel();
             this.DiagnosticsTabPage = new System.Windows.Forms.TabPage();
             this.MRSSYSDiagnosticsButton = new System.Windows.Forms.Button();
             this.GetMRSTestTextMessageButton = new System.Windows.Forms.Button();
             this.MRSTestMotorsButton = new System.Windows.Forms.Button();
             this.MRSGroupBox = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.TurnRateDeltaNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.SpeedDeltaUnitsLabel = new System.Windows.Forms.Label();
+            this.SpeedDeltaNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.RightButton = new System.Windows.Forms.Button();
             this.LeftButton = new System.Windows.Forms.Button();
             this.StopButton = new System.Windows.Forms.Button();
@@ -48,18 +54,14 @@
             this.StatusDisplayLabel = new System.Windows.Forms.Label();
             this.STatusLabel = new System.Windows.Forms.Label();
             this.MRSRCGroupBox = new System.Windows.Forms.GroupBox();
-            this.SpeedDeltaNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.SpeedDeltaUnitsLabel = new System.Windows.Forms.Label();
-            this.MRSRCPSP = new SerialControlNetwork.PacketSerialPortPanel();
-            this.MRSPSP = new SerialControlNetwork.PacketSerialPortPanel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.TurnRateDeltaNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.VBatt5DisplayLabel = new System.Windows.Forms.Label();
+            this.VBatt5Label = new System.Windows.Forms.Label();
             this.SystemsTabControl.SuspendLayout();
             this.SerialComsTabPage.SuspendLayout();
             this.DiagnosticsTabPage.SuspendLayout();
             this.MRSGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.SpeedDeltaNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TurnRateDeltaNumericUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SpeedDeltaNumericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // SystemsTabControl
@@ -129,6 +131,24 @@
             this.TestMRSComsButton.UseVisualStyleBackColor = true;
             this.TestMRSComsButton.Click += new System.EventHandler(this.TestMRSComsButton_Click);
             // 
+            // MRSRCPSP
+            // 
+            this.MRSRCPSP.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.MRSRCPSP.Location = new System.Drawing.Point(3, 87);
+            this.MRSRCPSP.Name = "MRSRCPSP";
+            this.MRSRCPSP.Size = new System.Drawing.Size(1050, 112);
+            this.MRSRCPSP.TabIndex = 4;
+            this.MRSRCPSP.UpdateParents = null;
+            // 
+            // MRSPSP
+            // 
+            this.MRSPSP.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.MRSPSP.Location = new System.Drawing.Point(3, 199);
+            this.MRSPSP.Name = "MRSPSP";
+            this.MRSPSP.Size = new System.Drawing.Size(1050, 108);
+            this.MRSPSP.TabIndex = 1;
+            this.MRSPSP.UpdateParents = null;
+            // 
             // DiagnosticsTabPage
             // 
             this.DiagnosticsTabPage.Controls.Add(this.MRSSYSDiagnosticsButton);
@@ -174,6 +194,8 @@
             // 
             // MRSGroupBox
             // 
+            this.MRSGroupBox.Controls.Add(this.VBatt5DisplayLabel);
+            this.MRSGroupBox.Controls.Add(this.VBatt5Label);
             this.MRSGroupBox.Controls.Add(this.label1);
             this.MRSGroupBox.Controls.Add(this.TurnRateDeltaNumericUpDown);
             this.MRSGroupBox.Controls.Add(this.SpeedDeltaUnitsLabel);
@@ -193,6 +215,75 @@
             this.MRSGroupBox.TabIndex = 5;
             this.MRSGroupBox.TabStop = false;
             this.MRSGroupBox.Text = "Mobile System";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(446, 117);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(40, 13);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "mrad/s";
+            // 
+            // TurnRateDeltaNumericUpDown
+            // 
+            this.TurnRateDeltaNumericUpDown.Increment = new decimal(new int[] {
+            175,
+            0,
+            0,
+            0});
+            this.TurnRateDeltaNumericUpDown.Location = new System.Drawing.Point(388, 115);
+            this.TurnRateDeltaNumericUpDown.Maximum = new decimal(new int[] {
+            1571,
+            0,
+            0,
+            0});
+            this.TurnRateDeltaNumericUpDown.Minimum = new decimal(new int[] {
+            1571,
+            0,
+            0,
+            -2147483648});
+            this.TurnRateDeltaNumericUpDown.Name = "TurnRateDeltaNumericUpDown";
+            this.TurnRateDeltaNumericUpDown.Size = new System.Drawing.Size(55, 20);
+            this.TurnRateDeltaNumericUpDown.TabIndex = 10;
+            this.TurnRateDeltaNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // SpeedDeltaUnitsLabel
+            // 
+            this.SpeedDeltaUnitsLabel.AutoSize = true;
+            this.SpeedDeltaUnitsLabel.Location = new System.Drawing.Point(446, 91);
+            this.SpeedDeltaUnitsLabel.Name = "SpeedDeltaUnitsLabel";
+            this.SpeedDeltaUnitsLabel.Size = new System.Drawing.Size(33, 13);
+            this.SpeedDeltaUnitsLabel.TabIndex = 9;
+            this.SpeedDeltaUnitsLabel.Text = "mm/s";
+            // 
+            // SpeedDeltaNumericUpDown
+            // 
+            this.SpeedDeltaNumericUpDown.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.SpeedDeltaNumericUpDown.Location = new System.Drawing.Point(388, 89);
+            this.SpeedDeltaNumericUpDown.Maximum = new decimal(new int[] {
+            127,
+            0,
+            0,
+            0});
+            this.SpeedDeltaNumericUpDown.Minimum = new decimal(new int[] {
+            127,
+            0,
+            0,
+            -2147483648});
+            this.SpeedDeltaNumericUpDown.Name = "SpeedDeltaNumericUpDown";
+            this.SpeedDeltaNumericUpDown.Size = new System.Drawing.Size(55, 20);
+            this.SpeedDeltaNumericUpDown.TabIndex = 8;
+            this.SpeedDeltaNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.SpeedDeltaNumericUpDown.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
             // 
             // RightButton
             // 
@@ -287,92 +378,23 @@
             this.MRSRCGroupBox.TabStop = false;
             this.MRSRCGroupBox.Text = "Remote Controller";
             // 
-            // SpeedDeltaNumericUpDown
+            // VBatt5DisplayLabel
             // 
-            this.SpeedDeltaNumericUpDown.Increment = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.SpeedDeltaNumericUpDown.Location = new System.Drawing.Point(388, 89);
-            this.SpeedDeltaNumericUpDown.Maximum = new decimal(new int[] {
-            127,
-            0,
-            0,
-            0});
-            this.SpeedDeltaNumericUpDown.Minimum = new decimal(new int[] {
-            127,
-            0,
-            0,
-            -2147483648});
-            this.SpeedDeltaNumericUpDown.Name = "SpeedDeltaNumericUpDown";
-            this.SpeedDeltaNumericUpDown.Size = new System.Drawing.Size(55, 20);
-            this.SpeedDeltaNumericUpDown.TabIndex = 8;
-            this.SpeedDeltaNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.SpeedDeltaNumericUpDown.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
+            this.VBatt5DisplayLabel.AutoSize = true;
+            this.VBatt5DisplayLabel.Location = new System.Drawing.Point(58, 29);
+            this.VBatt5DisplayLabel.Name = "VBatt5DisplayLabel";
+            this.VBatt5DisplayLabel.Size = new System.Drawing.Size(58, 13);
+            this.VBatt5DisplayLabel.TabIndex = 13;
+            this.VBatt5DisplayLabel.Text = "<not read>";
             // 
-            // SpeedDeltaUnitsLabel
+            // VBatt5Label
             // 
-            this.SpeedDeltaUnitsLabel.AutoSize = true;
-            this.SpeedDeltaUnitsLabel.Location = new System.Drawing.Point(446, 91);
-            this.SpeedDeltaUnitsLabel.Name = "SpeedDeltaUnitsLabel";
-            this.SpeedDeltaUnitsLabel.Size = new System.Drawing.Size(33, 13);
-            this.SpeedDeltaUnitsLabel.TabIndex = 9;
-            this.SpeedDeltaUnitsLabel.Text = "mm/s";
-            // 
-            // MRSRCPSP
-            // 
-            this.MRSRCPSP.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.MRSRCPSP.Location = new System.Drawing.Point(3, 87);
-            this.MRSRCPSP.Name = "MRSRCPSP";
-            this.MRSRCPSP.Size = new System.Drawing.Size(1050, 112);
-            this.MRSRCPSP.TabIndex = 4;
-            this.MRSRCPSP.UpdateParents = null;
-            // 
-            // MRSPSP
-            // 
-            this.MRSPSP.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.MRSPSP.Location = new System.Drawing.Point(3, 199);
-            this.MRSPSP.Name = "MRSPSP";
-            this.MRSPSP.Size = new System.Drawing.Size(1050, 108);
-            this.MRSPSP.TabIndex = 1;
-            this.MRSPSP.UpdateParents = null;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(446, 117);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(40, 13);
-            this.label1.TabIndex = 11;
-            this.label1.Text = "mrad/s";
-            // 
-            // TurnRateDeltaNumericUpDown
-            // 
-            this.TurnRateDeltaNumericUpDown.Increment = new decimal(new int[] {
-            175,
-            0,
-            0,
-            0});
-            this.TurnRateDeltaNumericUpDown.Location = new System.Drawing.Point(388, 115);
-            this.TurnRateDeltaNumericUpDown.Maximum = new decimal(new int[] {
-            1571,
-            0,
-            0,
-            0});
-            this.TurnRateDeltaNumericUpDown.Minimum = new decimal(new int[] {
-            1571,
-            0,
-            0,
-            -2147483648});
-            this.TurnRateDeltaNumericUpDown.Name = "TurnRateDeltaNumericUpDown";
-            this.TurnRateDeltaNumericUpDown.Size = new System.Drawing.Size(55, 20);
-            this.TurnRateDeltaNumericUpDown.TabIndex = 10;
-            this.TurnRateDeltaNumericUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.VBatt5Label.AutoSize = true;
+            this.VBatt5Label.Location = new System.Drawing.Point(12, 29);
+            this.VBatt5Label.Name = "VBatt5Label";
+            this.VBatt5Label.Size = new System.Drawing.Size(42, 13);
+            this.VBatt5Label.TabIndex = 12;
+            this.VBatt5Label.Text = "VBatt5:";
             // 
             // SerialControlView
             // 
@@ -391,8 +413,8 @@
             this.DiagnosticsTabPage.ResumeLayout(false);
             this.MRSGroupBox.ResumeLayout(false);
             this.MRSGroupBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.SpeedDeltaNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TurnRateDeltaNumericUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SpeedDeltaNumericUpDown)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -424,6 +446,8 @@
         private System.Windows.Forms.NumericUpDown SpeedDeltaNumericUpDown;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown TurnRateDeltaNumericUpDown;
+        private System.Windows.Forms.Label VBatt5DisplayLabel;
+        private System.Windows.Forms.Label VBatt5Label;
     }
 }
 

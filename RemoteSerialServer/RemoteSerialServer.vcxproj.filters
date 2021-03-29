@@ -24,7 +24,10 @@
     <ClInclude Include="ArdumotoController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DSCommandPacket.h">
+    <ClInclude Include="DriveSystemPacketDefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ArduinoControllerDefs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
