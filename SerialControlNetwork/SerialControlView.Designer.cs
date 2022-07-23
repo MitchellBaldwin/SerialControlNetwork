@@ -41,6 +41,8 @@
             this.GetMRSTestTextMessageButton = new System.Windows.Forms.Button();
             this.MRSTestMotorsButton = new System.Windows.Forms.Button();
             this.MRSGroupBox = new System.Windows.Forms.GroupBox();
+            this.VBatt5DisplayLabel = new System.Windows.Forms.Label();
+            this.VBatt5Label = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.TurnRateDeltaNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.SpeedDeltaUnitsLabel = new System.Windows.Forms.Label();
@@ -51,11 +53,9 @@
             this.BackwardButton = new System.Windows.Forms.Button();
             this.ForwardButton = new System.Windows.Forms.Button();
             this.MessageTextBox = new System.Windows.Forms.TextBox();
-            this.StatusDisplayLabel = new System.Windows.Forms.Label();
-            this.STatusLabel = new System.Windows.Forms.Label();
+            this.LastPacketTypeReceivedDisplayLabel = new System.Windows.Forms.Label();
+            this.LastPacketTypeReceivedLabel = new System.Windows.Forms.Label();
             this.MRSRCGroupBox = new System.Windows.Forms.GroupBox();
-            this.VBatt5DisplayLabel = new System.Windows.Forms.Label();
-            this.VBatt5Label = new System.Windows.Forms.Label();
             this.SystemsTabControl.SuspendLayout();
             this.SerialComsTabPage.SuspendLayout();
             this.DiagnosticsTabPage.SuspendLayout();
@@ -206,8 +206,8 @@
             this.MRSGroupBox.Controls.Add(this.BackwardButton);
             this.MRSGroupBox.Controls.Add(this.ForwardButton);
             this.MRSGroupBox.Controls.Add(this.MessageTextBox);
-            this.MRSGroupBox.Controls.Add(this.StatusDisplayLabel);
-            this.MRSGroupBox.Controls.Add(this.STatusLabel);
+            this.MRSGroupBox.Controls.Add(this.LastPacketTypeReceivedDisplayLabel);
+            this.MRSGroupBox.Controls.Add(this.LastPacketTypeReceivedLabel);
             this.MRSGroupBox.Dock = System.Windows.Forms.DockStyle.Left;
             this.MRSGroupBox.Location = new System.Drawing.Point(0, 0);
             this.MRSGroupBox.Name = "MRSGroupBox";
@@ -215,6 +215,24 @@
             this.MRSGroupBox.TabIndex = 5;
             this.MRSGroupBox.TabStop = false;
             this.MRSGroupBox.Text = "Mobile System";
+            // 
+            // VBatt5DisplayLabel
+            // 
+            this.VBatt5DisplayLabel.AutoSize = true;
+            this.VBatt5DisplayLabel.Location = new System.Drawing.Point(431, 138);
+            this.VBatt5DisplayLabel.Name = "VBatt5DisplayLabel";
+            this.VBatt5DisplayLabel.Size = new System.Drawing.Size(58, 13);
+            this.VBatt5DisplayLabel.TabIndex = 13;
+            this.VBatt5DisplayLabel.Text = "<not read>";
+            // 
+            // VBatt5Label
+            // 
+            this.VBatt5Label.AutoSize = true;
+            this.VBatt5Label.Location = new System.Drawing.Point(385, 138);
+            this.VBatt5Label.Name = "VBatt5Label";
+            this.VBatt5Label.Size = new System.Drawing.Size(42, 13);
+            this.VBatt5Label.TabIndex = 12;
+            this.VBatt5Label.Text = "VBatt5:";
             // 
             // label1
             // 
@@ -350,23 +368,24 @@
             this.MessageTextBox.Size = new System.Drawing.Size(524, 61);
             this.MessageTextBox.TabIndex = 2;
             // 
-            // StatusDisplayLabel
+            // LastPacketTypeReceivedDisplayLabel
             // 
-            this.StatusDisplayLabel.AutoSize = true;
-            this.StatusDisplayLabel.Location = new System.Drawing.Point(58, 16);
-            this.StatusDisplayLabel.Name = "StatusDisplayLabel";
-            this.StatusDisplayLabel.Size = new System.Drawing.Size(58, 13);
-            this.StatusDisplayLabel.TabIndex = 1;
-            this.StatusDisplayLabel.Text = "<not read>";
+            this.LastPacketTypeReceivedDisplayLabel.AutoSize = true;
+            this.LastPacketTypeReceivedDisplayLabel.Location = new System.Drawing.Point(154, 16);
+            this.LastPacketTypeReceivedDisplayLabel.Name = "LastPacketTypeReceivedDisplayLabel";
+            this.LastPacketTypeReceivedDisplayLabel.Size = new System.Drawing.Size(58, 13);
+            this.LastPacketTypeReceivedDisplayLabel.TabIndex = 1;
+            this.LastPacketTypeReceivedDisplayLabel.Text = "<not read>";
             // 
-            // STatusLabel
+            // LastPacketTypeReceivedLabel
             // 
-            this.STatusLabel.AutoSize = true;
-            this.STatusLabel.Location = new System.Drawing.Point(12, 16);
-            this.STatusLabel.Name = "STatusLabel";
-            this.STatusLabel.Size = new System.Drawing.Size(40, 13);
-            this.STatusLabel.TabIndex = 0;
-            this.STatusLabel.Text = "Status:";
+            this.LastPacketTypeReceivedLabel.AutoSize = true;
+            this.LastPacketTypeReceivedLabel.Location = new System.Drawing.Point(12, 16);
+            this.LastPacketTypeReceivedLabel.Name = "LastPacketTypeReceivedLabel";
+            this.LastPacketTypeReceivedLabel.Size = new System.Drawing.Size(133, 13);
+            this.LastPacketTypeReceivedLabel.TabIndex = 0;
+            this.LastPacketTypeReceivedLabel.Text = "Last packet type received:";
+            this.LastPacketTypeReceivedLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // MRSRCGroupBox
             // 
@@ -377,24 +396,6 @@
             this.MRSRCGroupBox.TabIndex = 6;
             this.MRSRCGroupBox.TabStop = false;
             this.MRSRCGroupBox.Text = "Remote Controller";
-            // 
-            // VBatt5DisplayLabel
-            // 
-            this.VBatt5DisplayLabel.AutoSize = true;
-            this.VBatt5DisplayLabel.Location = new System.Drawing.Point(58, 29);
-            this.VBatt5DisplayLabel.Name = "VBatt5DisplayLabel";
-            this.VBatt5DisplayLabel.Size = new System.Drawing.Size(58, 13);
-            this.VBatt5DisplayLabel.TabIndex = 13;
-            this.VBatt5DisplayLabel.Text = "<not read>";
-            // 
-            // VBatt5Label
-            // 
-            this.VBatt5Label.AutoSize = true;
-            this.VBatt5Label.Location = new System.Drawing.Point(12, 29);
-            this.VBatt5Label.Name = "VBatt5Label";
-            this.VBatt5Label.Size = new System.Drawing.Size(42, 13);
-            this.VBatt5Label.TabIndex = 12;
-            this.VBatt5Label.Text = "VBatt5:";
             // 
             // SerialControlView
             // 
@@ -429,8 +430,8 @@
         private PacketSerialPortPanel MRSPSP;
         private System.Windows.Forms.GroupBox MRSGroupBox;
         private System.Windows.Forms.GroupBox MRSRCGroupBox;
-        private System.Windows.Forms.Label StatusDisplayLabel;
-        private System.Windows.Forms.Label STatusLabel;
+        private System.Windows.Forms.Label LastPacketTypeReceivedDisplayLabel;
+        private System.Windows.Forms.Label LastPacketTypeReceivedLabel;
         private System.Windows.Forms.TextBox MessageTextBox;
         private System.Windows.Forms.Button MRSTestMotorsButton;
         private System.Windows.Forms.Button MRSSYSDiagnosticsButton;

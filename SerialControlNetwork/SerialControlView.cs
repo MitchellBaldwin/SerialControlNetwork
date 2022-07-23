@@ -66,7 +66,7 @@ namespace SerialControlNetwork
 
         public void UpdateDisplays(byte[] buffer)
         {
-            StatusDisplayLabel.Text = buffer[buffer.Length-1].ToString("X2");
+            LastPacketTypeReceivedDisplayLabel.Text = buffer[0x00].ToString("X2");
 
             byte commandByte = buffer[0];
             byte[] packetPayload = new byte[MRSPSP.PSPC.PacketPayloadSize];
@@ -110,7 +110,7 @@ namespace SerialControlNetwork
         private void GetMRSStatusButton_Click(object sender, EventArgs e)
         {
             byte[] dummy = { 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D };
-            MRSPSP.SendCommandMessage((byte)MRSMessageType.TestPacketTransfer, dummy);
+            MRSPSP.SendCommandMessage((byte)MRSMessageType.GetMRSStatus, dummy);
         }
 
         private void GetMRSTestTextMessageButton_Click(object sender, EventArgs e)

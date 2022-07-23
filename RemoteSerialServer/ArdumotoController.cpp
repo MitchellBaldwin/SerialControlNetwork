@@ -9,6 +9,7 @@
 
 #include "ArdumotoController.h"
 #include "DriveSystemPacketDefs.h"
+#include <wire.h>
 
 #define FORWARD	0
 #define REVERSE 1

@@ -8,7 +8,6 @@ the main (INO) programs implementing the MRSMCC, MRSRC, etc.
 
 */
 
-#include <PacketSerial.h>
 #include "ArdumotoController.h"
 
 ArdumotoController R5MRSMCC;

@@ -11,7 +11,6 @@
 
 #include <ArduinoControllerBase.h>
 
-#include <wire.h>
 #include <SFE_MicroOLED.h>
 
 // The SFE_MicroOLED library assumes a reset pin is necessary. 
@@ -43,8 +42,6 @@ class ArdumotoController : public ArduinoControllerBase
 		void Init(PacketSerial::PacketHandlerFunction);
 		void Update();
 };
-
-//extern ArdumotoControllerClass ArdumotoController;
 
 #endif
 

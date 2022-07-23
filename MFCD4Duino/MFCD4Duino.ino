@@ -11,7 +11,7 @@
 
 #define DisplaySerial Serial1
 
-#define CommSerial SoftSerial1
+//#define CommSerial SoftSerial1
 
 const word screenWidth = 240;
 const word screenHeight = 320;
@@ -27,9 +27,9 @@ Picaso_Serial_4DLib Display(&DisplaySerial);
 //#include <SoftwareSerial.h>
 //#define ESPserial SerialS
 //SoftwareSerial SerialS(8, 9) ;
-// Uncomment next 2 lines to use ESP8266 with ESP8266 library from https://github.com/itead/ITEADLIB_Arduino_WeeESP8266
-//#include "ESP8266.h"
-//ESP8266 wifi(SerialS,19200);
+//// Uncomment next 2 lines to use ESP8266 with ESP8266 library from https://github.com/itead/ITEADLIB_Arduino_WeeESP8266
+////#include "ESP8266.h"
+////ESP8266 wifi(SerialS,19200);
 
 // Routine to handle Serial errors
 void mycallback(int ErrCode, unsigned char Errorbyte)
