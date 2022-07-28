@@ -27,12 +27,18 @@
     <ClInclude Include="Trellis.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="JSBLocalDisplay.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LEDControl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Trellis.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JSBLocalDisplay.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

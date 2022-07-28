@@ -120,11 +120,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="JSBLocalDisplay.h" />
     <ClInclude Include="LEDControl.h" />
     <ClInclude Include="Trellis.h" />
     <ClInclude Include="__vm\.JSBoardProMini.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="JSBLocalDisplay.cpp" />
     <ClCompile Include="LEDControl.cpp" />
     <ClCompile Include="Trellis.cpp" />
   </ItemGroup>
@@ -133,7 +135,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties arduino.upload.port="COM4" config.Debug.customdebug_pro_16MHzatmega328_debugger_type="universal" />
+      <UserProperties arduino.upload.port="COM6" config.Debug.customdebug_pro_16MHzatmega328_debugger_type="universal" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>
