@@ -6,7 +6,8 @@
 
 void JSBLocalDisplayClass::DrawSYSPage()
 {
-	if (currentPage != SYS)
+	currentPage = SYS;
+	if (lastPage != SYS)
 	{
 		// Clear display and redraw page format:
 		display.clearDisplay();
@@ -14,7 +15,8 @@ void JSBLocalDisplayClass::DrawSYSPage()
 		display.cp437();
 		display.setTextSize(1);
 		display.write("SYS");
-		currentPage = SYS;
+
+		lastPage = currentPage;
 	}
 	// Draw dynamic elements:
 
@@ -23,16 +25,28 @@ void JSBLocalDisplayClass::DrawSYSPage()
 
 void JSBLocalDisplayClass::DrawPOWPage()
 {
-	if (currentPage != POW)
+	currentPage = POW;
+	if (lastPage != POW)
 	{
 		// Clear display and redraw page format:
 		display.clearDisplay();
 
-		currentPage = POW;
+		lastPage = POW;
 	}
 	// Draw dynamic elements:
 
 	display.display();
+}
+
+void JSBLocalDisplayClass::DrawNONEPage()
+{
+	currentPage = NONE;
+	if (lastPage != NONE)
+	{
+		display.clearDisplay();
+		display.display();
+		lastPage = NONE;
+	}
 }
 
 JSBLocalDisplayClass::JSBLocalDisplayClass()
@@ -78,39 +92,47 @@ void JSBLocalDisplayClass::Update()
 {
 	switch (currentPage)
 	{
-		case SYS:
-		{
+		case SYS :
 			DrawSYSPage();
-		}
-		case POW:
-		{
+			break;
+		case POW :
 			DrawPOWPage();
-		}
-		default:
-		{
-			DrawSYSPage();
-		}
+			break;
+		default :
+			DrawNONEPage();
 	}
+	
+	//switch (currentPage)
+	//{
+	//	case SYS:
+	//	{
+	//		DrawSYSPage();
+	//	}
+	//	case POW:
+	//	{
+	//		DrawPOWPage();
+	//	}
+	//	default:
+	//	{
+	//		DrawSYSPage();
+	//	}
+	//}
 }
 
 void JSBLocalDisplayClass::Control(uint8_t command)
 {
 	switch (command)
 	{
-	case Clear:
-	{
-		display.clearDisplay();
-		display.display();
-	}
-	case Refresh:
-	{
-		lastPage = NONE;
-		Update();
-	}
-	default:
-		{
-
-		}
+		case Clear:
+			display.clearDisplay();
+			display.display();
+			break;
+		case Refresh:
+			lastPage = NONE;		// Will not refresh if currentPage == NONE...
+			Update();
+			break;
+		default:
+			return;
 	}
 }
 

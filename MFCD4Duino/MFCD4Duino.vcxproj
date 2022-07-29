@@ -56,8 +56,7 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Label="Shared">
-  </ImportGroup>
+  <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -77,10 +76,10 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\MFCD4Duino;$(ProjectDir)..\..\..\..\Arduino\Sketchbook\libraries\KY-040-Encoder-Library---Arduino-master;$(ProjectDir)..\..\..\..\Arduino\Sketchbook\libraries\Task_Scheduler\src;C:\Users\mitch\AppData\Local\arduino15\packages\4D Systems\hardware\avr\1.8.1\libraries\Picaso_Serial_4DLib;C:\Users\mitch\AppData\Local\arduino15\packages\4D Systems\hardware\avr\1.8.1\libraries\SoftwareSerial\src;$(ProjectDir)..\..\..\..\Arduino\Sketchbook\libraries\ITEADLIB_Arduino_WeeESP8266-master;C:\Users\mitch\AppData\Local\arduino15\packages\4D Systems\hardware\avr\1.8.1\cores\4duino;C:\Users\mitch\AppData\Local\arduino15\packages\4D Systems\hardware\avr\1.8.1\variants\4duino;C:\Users\mitch\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\\lib\gcc\avr\7.3.0\include;C:\Users\mitch\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\avr\include;C:\Users\mitch\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\\lib\gcc\avr\7.3.0\include;C:\Users\mitch\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\avr\include-fixed;C:\Users\mitch\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\avr\include\avr;C:\Users\mitch\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\lib\gcc\avr\4.8.1\include;C:\Users\mitch\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\lib\gcc\avr\4.9.2\include;C:\Users\mitch\AppData\Local\arduino15\packages\arduino\tools\avr-gcc\7.3.0-atmel3.6.1-arduino7\lib\gcc\avr\4.9.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\MFCD4Duino;$(ProjectDir)..\..\..\Users\mitch\AppData\Local\arduino15\packages\4D Systems\hardware\avr\1.8.1\libraries\Picaso_Serial_4DLib;$(ProjectDir)..\..\..\Users\mitch\AppData\Local\arduino15\packages\4D Systems\hardware\avr\1.8.1\variants\4duino;$(ProjectDir)..\..\..\Users\mitch\AppData\Local\arduino15\packages\4D Systems\hardware\avr\1.8.1\cores\4duino;$(ProjectDir)..\..\..\Arduino\hardware\tools\avr\\lib\gcc\avr\7.3.0\include;$(ProjectDir)..\..\..\Arduino\hardware\tools\avr\avr\include;$(ProjectDir)..\..\..\Arduino\hardware\tools\avr\\lib\gcc\avr\7.3.0\include;$(ProjectDir)..\..\..\Arduino\hardware\tools\avr\avr\include-fixed;$(ProjectDir)..\..\..\Arduino\hardware\tools\avr\avr\include\avr;$(ProjectDir)..\..\..\Arduino\hardware\tools\avr\lib\gcc\avr\4.9.2\include;$(ProjectDir)..\..\..\Arduino\hardware\tools\avr\lib\gcc\avr\4.9.2\include;$(ProjectDir)..\..\..\Arduino\hardware\tools\avr\lib\gcc\avr\4.9.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>$(ProjectDir)__vm\.MFCD4Duino.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <IgnoreStandardIncludePath>true</IgnoreStandardIncludePath>
-      <PreprocessorDefinitions>__AVR_atmega32u4__;__AVR_ATmega32U4__;__AVR_ATmega32u4__;_VMDEBUG=1;F_CPU=16000000L;ARDUINO=10809;ARDUINO_AVR_4DUINO;ARDUINO_ARCH_AVR;USB_VID=0x04D8;USB_PID=0xF110;__cplusplus=201103L;_VMICRO_INTELLISENSE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__AVR_atmega32u4__;__AVR_ATmega32U4__;__AVR_ATmega32u4__;_VMDEBUG=1;F_CPU=16000000L;ARDUINO=108019;ARDUINO_AVR_4DUINO;ARDUINO_ARCH_AVR;USB_VID=0x04D8;USB_PID=0xF110;USB_MANUFACTURER="Unknown";USB_PRODUCT="4D;__cplusplus=201103L;_VMICRO_INTELLISENSE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

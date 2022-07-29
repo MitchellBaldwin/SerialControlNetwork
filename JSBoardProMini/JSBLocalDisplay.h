@@ -44,6 +44,8 @@ class JSBLocalDisplayClass
 	 void DrawSYSPage();
 	 void DrawPOWPage();
 
+	 void DrawNONEPage();
+
  public:
 	 enum Commands
 	 {
