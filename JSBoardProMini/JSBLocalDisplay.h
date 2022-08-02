@@ -1,4 +1,15 @@
-// JSBLocalDisplay.h
+/*	JSBLocalDisplayClass - Base class for implementing paged graphical display interface for joystick,
+*	keypad and other physical user controls used for remote control of mobile robot systems.
+*
+*	
+*	
+*
+*	Mitchell Baldwin copyright 2022
+*
+*	v 0.00:	Initial command set
+*	v
+*
+*/
 
 #ifndef _JSBLOCALDISPLAY_h
 #define _JSBLOCALDISPLAY_h
@@ -8,6 +19,7 @@
 #else
 	#include "WProgram.h"
 #endif
+#include "JSPkt.h"
 #include <gfxfont.h>
 #include <Adafruit_SPITFT_Macros.h>
 #include <Adafruit_SPITFT.h>
@@ -30,6 +42,8 @@ class JSBLocalDisplayClass
 {
  protected:
 	 Adafruit_SSD1306 display;
+	 uint8_t I2CAddress = 0x00;
+	 char buf[32];
 
 	 enum Pages
 	 {
@@ -43,6 +57,7 @@ class JSBLocalDisplayClass
 
 	 void DrawSYSPage();
 	 void DrawPOWPage();
+	 void DrawCOMPage();
 
 	 void DrawNONEPage();
 
@@ -51,6 +66,9 @@ class JSBLocalDisplayClass
 	 {
 		 Clear,
 		 Refresh,
+		 SYSPage,
+		 POWPage,
+		 COMPage,
 		 Prev,
 		 Next,
 
@@ -59,6 +77,7 @@ class JSBLocalDisplayClass
 
 	 JSBLocalDisplayClass();		// Default constructor
 	 void Init(uint8_t address);
+	 bool Test();
 	 void Update();
 	 void Control(uint8_t command);
 

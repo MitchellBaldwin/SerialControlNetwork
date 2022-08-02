@@ -9,7 +9,7 @@
 #include <Tasks.h>
 #include <Wire.h>
 
-uint16_t DrvJSX, DrvJSY, PTJSX, PTJSY;
+//uint16_t DrvJSX, DrvJSY, PTJSX, PTJSY;
 
 constexpr auto PPM5VENAPIN = 4;
 constexpr auto DRVJSBTNPIN = 6;
@@ -17,8 +17,12 @@ constexpr auto PTJSBTNPIN = 5;
 
 #define LOCALDISPLAY_I2C_ADDRESS 0x3C
 
-void ReadTrellis(void)
+void ReadAndUpdateControls(void)
 {
+	ReadJoysticks();
+	
+	JSBLocalDisplay.Update();
+	
 	if (MODE == MOMENTARY) {
 		// If a button was just pressed or released...
 		if (trellis.readSwitches()) {
@@ -59,8 +63,12 @@ void ReadTrellis(void)
 					}
 					else if (i == 1)
 					{
-						JSBLocalDisplay.Control(JSBLocalDisplayClass::Refresh);
+						JSBLocalDisplay.Control(JSBLocalDisplayClass::SYSPage);
 					}
+					//else if (i == 2)
+					//{
+					//	JSBLocalDisplay.Control(JSBLocalDisplayClass::POWPage);
+					//}
 				}
 			}
 			// tell the trellis to set the LEDs we requested
@@ -71,10 +79,10 @@ void ReadTrellis(void)
 
 void ReadJoysticks()
 {
-	DrvJSX = analogRead(A0);
-	DrvJSY = analogRead(A1);
-	PTJSX = analogRead(A6);
-	PTJSY = analogRead(A7);
+	JSPkt.DrvJSX = analogRead(A0) - 512;
+	JSPkt.DrvJSY = analogRead(A1) - 512;
+	JSPkt.PTJSX = analogRead(A6) - 512;
+	JSPkt.PTJSY = analogRead(A7) - 512;
 
 	if (!digitalRead(DRVJSBTNPIN))
 	{
@@ -82,7 +90,6 @@ void ReadJoysticks()
 		trellis.writeDisplay();
 	}
 
-	// Serial.println(DrvJSX);
 }
 
 void setup() {
@@ -94,11 +101,15 @@ void setup() {
 	pinMode(DRVJSBTNPIN, INPUT_PULLUP);		// Check whther joystick buttons have their own pull-up resistors
 	pinMode(PTJSBTNPIN, INPUT_PULLUP);
 
-	Tasks_Init();
-	Tasks_Add((Task)BuiltinLEDToggle, 750, 0);
-	Tasks_Add((Task)ReadTrellis, 30, 0);
-	Tasks_Add((Task)ReadJoysticks, 100, 0);
-	Tasks_Start();
+	JSBLocalDisplay.Init(LOCALDISPLAY_I2C_ADDRESS);
+	// Normal operation; blink LED at 0.5 Hz:
+	int16_t BuiltinLEDOnTime = 1000;
+	//if (!JSBLocalDisplay.Test())
+	//{
+	//	// Local display initialization failed; blink LED at 2 Hz:
+	//	BuiltinLEDOnTime = 250;
+	//}
+	//JSBLocalDisplay.Control(JSBLocalDisplayClass::SYSPage);
 
 	Serial.begin(115200);
 	while (!Serial);
@@ -126,7 +137,11 @@ void setup() {
 		delay(50);
 	}
 
-	JSBLocalDisplay.Init(LOCALDISPLAY_I2C_ADDRESS);
+	Tasks_Init();
+	Tasks_Add((Task)BuiltinLEDToggle, BuiltinLEDOnTime, 0);
+	Tasks_Add((Task)ReadAndUpdateControls, 100, 0);
+	Tasks_Start();
+
 }
 void loop()
 {

@@ -1,24 +1,48 @@
-// 
-// 
-// 
+/*	JSBLocalDisplayClass - Base class for implementing paged graphical display interface for joystick,
+*	keypad and other physical user controls used for remote control of mobile robot systems.
+*
+*	Mitchell Baldwin copyright 2022
+*
+*/
 
 #include "JSBLocalDisplay.h"
 
 void JSBLocalDisplayClass::DrawSYSPage()
 {
 	currentPage = SYS;
-	if (lastPage != SYS)
+
+	if (lastPage != currentPage)
 	{
-		// Clear display and redraw page format:
+		// Clear display and redraw static elements of the page format:
 		display.clearDisplay();
 		display.setCursor(0, 0);
 		display.cp437();
 		display.setTextSize(1);
-		display.write("SYS");
+		display.write("MRS RC CSS JSB System");
+	
+		display.setCursor(0, 32);
+		display.write("KP");
+		display.setCursor(0, 40);
+		display.write("HWS:");
+		display.setCursor(64, 40);
+		display.write("SWS:");
+		display.setCursor(0, 48);
+		display.write("I2C:");
+		display.setCursor(0, 56);
+		display.write("<NONE    SYS     POW>");
 
 		lastPage = currentPage;
 	}
-	// Draw dynamic elements:
+	
+	// Update dynamic displays:
+	display.fillRect(0, 16, 128, 8, SSD1306_BLACK);
+	snprintf(buf, 22, "U/D %+04d     F/R %+04d", JSPkt.PTJSY, JSPkt.DrvJSY);
+	display.setCursor(0, 16);
+	display.write(buf);
+	display.fillRect(0, 24, 128, 8, 0x0000);
+	snprintf(buf, 22, "L/R %+04d     L/R %+04d", JSPkt.PTJSX, JSPkt.DrvJSX);
+	display.setCursor(0, 24);
+	display.write(buf);
 
 	display.display();
 }
@@ -28,14 +52,27 @@ void JSBLocalDisplayClass::DrawPOWPage()
 	currentPage = POW;
 	if (lastPage != POW)
 	{
-		// Clear display and redraw page format:
-		display.clearDisplay();
+	//	// Clear display and redraw static elements of the page format:
+	//	display.clearDisplay();
+	//	display.setCursor(0, 0);
+	//	display.cp437();
+	//	display.setTextSize(1);
+	//	display.write("MRS RC CSS JSB Power");
 
-		lastPage = POW;
+	//	display.setCursor(0, 16);
+	//	display.write("Vraw");
+	//	display.setCursor(0, 24);
+	//	display.write("5V Reg OFF/ENA");
+
+	//	lastPage = currentPage;
 	}
-	// Draw dynamic elements:
+	//// Draw dynamic elements:
 
-	display.display();
+	//display.display();
+}
+
+void JSBLocalDisplayClass::DrawCOMPage()
+{
 }
 
 void JSBLocalDisplayClass::DrawNONEPage()
@@ -44,9 +81,9 @@ void JSBLocalDisplayClass::DrawNONEPage()
 	if (lastPage != NONE)
 	{
 		display.clearDisplay();
-		display.display();
 		lastPage = NONE;
 	}
+	display.display();
 }
 
 JSBLocalDisplayClass::JSBLocalDisplayClass()
@@ -60,13 +97,34 @@ void JSBLocalDisplayClass::Init(uint8_t address)
 	if (!display.begin(SSD1306_SWITCHCAPVCC, address))
 	{
 		Serial.println(F("SSD1306 allocation failed"));
-		for (;;); // Don't proceed, loop forever
+		//for (;;); // Don't proceed, loop forever
 	}
+	// I2C address is valid, so save it:
+	I2CAddress = address;
+
 	// Show initial display buffer contents on the screen --
 	// the library initializes this with an Adafruit splash screen.
 	display.display();
 	delay(2000); // Pause for 2 seconds
 
+	display.clearDisplay();					// Clear the buffer
+	display.setTextSize(1);					// Normal 1:1 pixel scale
+	display.setTextColor(SSD1306_WHITE);	// Draw white text
+	display.setCursor(0, 0);				// Start at top-left corner
+	display.cp437(true);					// Use full 256 char 'Code Page 437' font
+	display.display();
+
+	lastPage = NONE;
+	currentPage = SYS;
+}
+
+bool JSBLocalDisplayClass::Test()
+{
+	if (!display.begin(SSD1306_SWITCHCAPVCC, I2CAddress))
+	{
+		return false;
+	}
+	
 	display.clearDisplay();					// Clear the buffer
 	display.setTextSize(1);					// Normal 1:1 pixel scale
 	display.setTextColor(SSD1306_WHITE);	// Draw white text
@@ -85,7 +143,7 @@ void JSBLocalDisplayClass::Init(uint8_t address)
 		}
 	display.display();
 
-	currentPage = SYS;
+	return true;
 }
 
 void JSBLocalDisplayClass::Update()
@@ -101,22 +159,6 @@ void JSBLocalDisplayClass::Update()
 		default :
 			DrawNONEPage();
 	}
-	
-	//switch (currentPage)
-	//{
-	//	case SYS:
-	//	{
-	//		DrawSYSPage();
-	//	}
-	//	case POW:
-	//	{
-	//		DrawPOWPage();
-	//	}
-	//	default:
-	//	{
-	//		DrawSYSPage();
-	//	}
-	//}
 }
 
 void JSBLocalDisplayClass::Control(uint8_t command)
@@ -124,17 +166,25 @@ void JSBLocalDisplayClass::Control(uint8_t command)
 	switch (command)
 	{
 		case Clear:
-			display.clearDisplay();
-			display.display();
+			DrawNONEPage();
 			break;
 		case Refresh:
 			lastPage = NONE;		// Will not refresh if currentPage == NONE...
+			display.clearDisplay();	// This might fix refreshing when currentPage == NONE
 			Update();
+			break;
+		case SYSPage:
+			DrawSYSPage();
+			break;
+		case POWPage:
+			DrawPOWPage();
+			break;
+		case COMPage:
+			DrawCOMPage();
 			break;
 		default:
 			return;
 	}
 }
-
 
 JSBLocalDisplayClass JSBLocalDisplay;

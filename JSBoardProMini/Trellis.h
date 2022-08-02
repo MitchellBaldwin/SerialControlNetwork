@@ -53,7 +53,7 @@ Adafruit_TrellisSet trellis = Adafruit_TrellisSet(&matrix0);
 // Even 8 tiles use only 3 wires max
 
 void InitTrellis(void);
-void ReadTrellis(void);
+void ReadAndUpdateControls(void);
 
 #endif
 
