@@ -23,13 +23,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructByteConverter", "Byte
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JSBoardProMini", "JSBoardProMini\JSBoardProMini.vcxproj", "{70334204-4B31-4B07-8376-3A761789DE1D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MemoryLib-1.0.1", "..\..\..\Arduino\Sketchbook\libraries\MemoryLib\MemoryLib-1.0.1.vcxitems", "{6E1417BD-9916-42AA-9204-8C191C6DEF02}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MemoryFree-master-0.0.0", "..\..\..\Arduino\Sketchbook\libraries\MemoryFree-master\MemoryFree-master-0.0.0.vcxitems", "{4F36B5B4-91A4-4815-B168-362DDC91F996}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		..\..\Arduino\Sketchbook\libraries\Adafruit_GFX_Library\Adafruit_GFX_Library-1.10.7.vcxitems*{70334204-4b31-4b07-8376-3a761789de1d}*SharedItemsImports = 4
-		..\..\Arduino\Sketchbook\libraries\Adafruit_SSD1306\Adafruit_SSD1306-2.4.3.vcxitems*{70334204-4b31-4b07-8376-3a761789de1d}*SharedItemsImports = 4
-		..\..\Arduino\Sketchbook\libraries\Adafruit_Trellis_Library\Adafruit_Trellis_Library-1.0.1.vcxitems*{70334204-4b31-4b07-8376-3a761789de1d}*SharedItemsImports = 4
-		..\..\Arduino\Sketchbook\libraries\Task_Scheduler\Task_Scheduler-1.4.vcxitems*{70334204-4b31-4b07-8376-3a761789de1d}*SharedItemsImports = 4
-		..\..\Users\mitch\AppData\Local\arduino15\packages\arduino\hardware\avr\1.8.3\libraries\Wire\Wire-1.0.vcxitems*{70334204-4b31-4b07-8376-3a761789de1d}*SharedItemsImports = 4
+		..\..\..\Arduino\Sketchbook\libraries\MemoryFree-master\MemoryFree-master-0.0.0.vcxitems*{4f36b5b4-91a4-4815-b168-362ddc91f996}*SharedItemsImports = 9
+		..\..\..\Arduino\Sketchbook\libraries\MemoryLib\MemoryLib-1.0.1.vcxitems*{6e1417bd-9916-42aa-9204-8c191c6def02}*SharedItemsImports = 9
+		..\..\..\Arduino\Sketchbook\libraries\MemoryFree-master\MemoryFree-master-0.0.0.vcxitems*{70334204-4b31-4b07-8376-3a761789de1d}*SharedItemsImports = 4
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

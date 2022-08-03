@@ -3,6 +3,7 @@
  Created:	7/23/2022 3:55:16 PM
  Author:	Mitchell Baldwin
 */
+#include <MemoryFree.h>
 #include "JSBLocalDisplay.h"
 #include "Trellis.h"
 #include "LEDControl.h"
@@ -23,27 +24,6 @@ void ReadAndUpdateControls(void)
 	
 	JSBLocalDisplay.Update();
 	
-	if (MODE == MOMENTARY) {
-		// If a button was just pressed or released...
-		if (trellis.readSwitches()) {
-			// go through every button
-			for (uint8_t i = 0; i < numKeys; i++) {
-				// if it was pressed, turn it on
-				if (trellis.justPressed(i)) {
-					Serial.print("v"); Serial.println(i);
-					trellis.setLED(i);
-				}
-				// if it was released, turn it off
-				if (trellis.justReleased(i)) {
-					Serial.print("^"); Serial.println(i);
-					trellis.clrLED(i);
-				}
-			}
-			// tell the trellis to set the LEDs we requested
-			trellis.writeDisplay();
-		}
-	}
-
 	if (MODE == LATCHING) {
 		// If a button was just pressed or released...
 		if (trellis.readSwitches()) {
@@ -65,10 +45,10 @@ void ReadAndUpdateControls(void)
 					{
 						JSBLocalDisplay.Control(JSBLocalDisplayClass::SYSPage);
 					}
-					//else if (i == 2)
-					//{
-					//	JSBLocalDisplay.Control(JSBLocalDisplayClass::POWPage);
-					//}
+					else if (i == 2)
+					{
+						JSBLocalDisplay.Control(JSBLocalDisplayClass::POWPage);
+					}
 				}
 			}
 			// tell the trellis to set the LEDs we requested
@@ -113,7 +93,7 @@ void setup() {
 
 	Serial.begin(115200);
 	while (!Serial);
-	Serial.println("JS Board");
+	Serial.println(F("JS Board"));
 
 	// Initialize Trellis INT pin; requires a pullup
 	pinMode(TRELLISINTPIN, INPUT);
@@ -123,6 +103,8 @@ void setup() {
 	//I find it easiest if the addresses are in order
 	trellis.begin(0x70);  // only one
 	//trellis.begin(0x70, 0x71, 0x72, 0x73);  // or four!
+	Serial.print(F("Free memory = "));
+	Serial.println(getFreeMemory());
 
 	// light up all the LEDs in order
 	for (uint8_t i = 0; i < numKeys; i++) {

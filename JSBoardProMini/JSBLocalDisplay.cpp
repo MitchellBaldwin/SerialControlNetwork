@@ -5,6 +5,7 @@
 *
 */
 
+#include "JSBGlobals.h"
 #include "JSBLocalDisplay.h"
 
 void JSBLocalDisplayClass::DrawSYSPage()
@@ -18,8 +19,9 @@ void JSBLocalDisplayClass::DrawSYSPage()
 		display.setCursor(0, 0);
 		display.cp437();
 		display.setTextSize(1);
-		display.write("MRS RC CSS JSB System");
-	
+		memcpy(buf, sysPageTitle, sizeof(sysPageTitle));
+		display.write(buf);
+
 		display.setCursor(0, 32);
 		display.write("KP");
 		display.setCursor(0, 40);
@@ -29,7 +31,8 @@ void JSBLocalDisplayClass::DrawSYSPage()
 		display.setCursor(0, 48);
 		display.write("I2C:");
 		display.setCursor(0, 56);
-		display.write("<NONE    SYS     POW>");
+		memcpy(buf, sysPageMenu, sizeof(sysPageMenu));
+		display.write(buf);
 
 		lastPage = currentPage;
 	}
@@ -52,23 +55,24 @@ void JSBLocalDisplayClass::DrawPOWPage()
 	currentPage = POW;
 	if (lastPage != POW)
 	{
-	//	// Clear display and redraw static elements of the page format:
-	//	display.clearDisplay();
-	//	display.setCursor(0, 0);
-	//	display.cp437();
-	//	display.setTextSize(1);
-	//	display.write("MRS RC CSS JSB Power");
+		// Clear display and redraw static elements of the page format:
+		display.clearDisplay();
+		display.cp437();
+		display.setTextSize(1);
+		display.setCursor(0, 0);
+		memcpy(buf, powPageTitle, sizeof(powPageTitle));
+		display.write(buf);
 
-	//	display.setCursor(0, 16);
-	//	display.write("Vraw");
-	//	display.setCursor(0, 24);
-	//	display.write("5V Reg OFF/ENA");
+		display.setCursor(0, 16);
+		display.write("Vraw");
+		display.setCursor(0, 24);
+		display.write("5V Reg OFF/ENA");
 
-	//	lastPage = currentPage;
+		lastPage = currentPage;
 	}
-	//// Draw dynamic elements:
+	// Draw dynamic elements:
 
-	//display.display();
+	display.display();
 }
 
 void JSBLocalDisplayClass::DrawCOMPage()
