@@ -3,10 +3,10 @@
  Created:	7/23/2022 3:55:16 PM
  Author:	Mitchell Baldwin
 */
-#include <MemoryFree.h>
+#include "TrellisKeypad.h"
 #include "JSBLocalDisplay.h"
-#include "Trellis.h"
 #include "LEDControl.h"
+#include <MemoryFree.h>
 #include <Tasks.h>
 #include <Wire.h>
 
@@ -24,36 +24,34 @@ void ReadAndUpdateControls(void)
 	
 	JSBLocalDisplay.Update();
 	
-	if (MODE == LATCHING) {
-		// If a button was just pressed or released...
-		if (trellis.readSwitches()) {
-			// go through every button
-			for (uint8_t i = 0; i < numKeys; i++) {
-				// if it was pressed...
-				if (trellis.justPressed(i)) {
-					Serial.print("v"); Serial.println(i);
-					// Alternate the LED
-					if (trellis.isLED(i))
-						trellis.clrLED(i);
-					else
-						trellis.setLED(i);
-					if (i == 0)
-					{
-						JSBLocalDisplay.Control(JSBLocalDisplayClass::Clear);
-					}
-					else if (i == 1)
-					{
-						JSBLocalDisplay.Control(JSBLocalDisplayClass::SYSPage);
-					}
-					else if (i == 2)
-					{
-						JSBLocalDisplay.Control(JSBLocalDisplayClass::POWPage);
-					}
+	// If a button was just pressed or released...
+	if (TrellisKeypad.Keypad.readSwitches()) {
+		// go through every button
+		for (uint8_t i = 0; i < numKeys; i++) {
+			// if it was pressed...
+			if (TrellisKeypad.Keypad.justPressed(i)) {
+				Serial.print("v"); Serial.println(i);
+				// Alternate the LED
+				if (TrellisKeypad.Keypad.isLED(i))
+					TrellisKeypad.Keypad.clrLED(i);
+				else
+					TrellisKeypad.Keypad.setLED(i);
+				if (i == 0)
+				{
+					JSBLocalDisplay.Control(JSBLocalDisplayClass::Clear);
+				}
+				else if (i == 1)
+				{
+					JSBLocalDisplay.Control(JSBLocalDisplayClass::SYSPage);
+				}
+				else if (i == 2)
+				{
+					JSBLocalDisplay.Control(JSBLocalDisplayClass::POWPage);
 				}
 			}
-			// tell the trellis to set the LEDs we requested
-			trellis.writeDisplay();
 		}
+		// tell the trellis to set the LEDs we requested
+		TrellisKeypad.Keypad.writeDisplay();
 	}
 }
 
@@ -66,8 +64,8 @@ void ReadJoysticks()
 
 	if (!digitalRead(DRVJSBTNPIN))
 	{
-		trellis.setLED(0);
-		trellis.writeDisplay();
+		TrellisKeypad.Keypad.setLED(0);
+		TrellisKeypad.Keypad.writeDisplay();
 	}
 
 }
@@ -95,29 +93,15 @@ void setup() {
 	while (!Serial);
 	Serial.println(F("JS Board"));
 
-	// Initialize Trellis INT pin; requires a pullup
-	pinMode(TRELLISINTPIN, INPUT);
-	digitalWrite(TRELLISINTPIN, HIGH);
-
-	//begin() with the addresses of each panel in order
-	//I find it easiest if the addresses are in order
-	trellis.begin(0x70);  // only one
-	//trellis.begin(0x70, 0x71, 0x72, 0x73);  // or four!
 	Serial.print(F("Free memory = "));
 	Serial.println(getFreeMemory());
 
-	// light up all the LEDs in order
-	for (uint8_t i = 0; i < numKeys; i++) {
-		trellis.setLED(i);
-		trellis.writeDisplay();
-		delay(50);
-	}
-	// then turn them off
-	for (uint8_t i = 0; i < numKeys; i++) {
-		trellis.clrLED(i);
-		trellis.writeDisplay();
-		delay(50);
-	}
+	TrellisKeypad.Init();
+
+	Serial.print(F("Free memory = "));
+	Serial.println(getFreeMemory());
+
+	TrellisKeypad.Test();
 
 	Tasks_Init();
 	Tasks_Add((Task)BuiltinLEDToggle, BuiltinLEDOnTime, 0);

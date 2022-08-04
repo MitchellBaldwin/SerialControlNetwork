@@ -68,6 +68,10 @@ void JSBLocalDisplayClass::DrawPOWPage()
 		display.setCursor(0, 24);
 		display.write("5V Reg OFF/ENA");
 
+		display.setCursor(0, 56);
+		memcpy(buf, powPageMenu, sizeof(powPageMenu));
+		display.write(buf);
+
 		lastPage = currentPage;
 	}
 	// Draw dynamic elements:
@@ -101,7 +105,6 @@ void JSBLocalDisplayClass::Init(uint8_t address)
 	if (!display.begin(SSD1306_SWITCHCAPVCC, address))
 	{
 		Serial.println(F("SSD1306 allocation failed"));
-		//for (;;); // Don't proceed, loop forever
 	}
 	// I2C address is valid, so save it:
 	I2CAddress = address;
