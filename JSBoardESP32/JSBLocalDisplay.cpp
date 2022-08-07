@@ -22,14 +22,14 @@ void JSBLocalDisplayClass::DrawSYSPage()
 		memcpy(buf, sysPageTitle, sizeof(sysPageTitle));
 		display.write(buf);
 
-		//display.setCursor(0, 32);
-		//display.write("KP");
-		//display.setCursor(0, 40);
-		//display.write("HWS:");
-		//display.setCursor(64, 40);
-		//display.write("SWS:");
-		//display.setCursor(0, 48);
-		//display.write("I2C:");
+		display.setCursor(0, 32);
+		display.write("KP");
+		display.setCursor(0, 40);
+		display.write("HWS:");
+		display.setCursor(64, 40);
+		display.write("SWS:");
+		display.setCursor(0, 48);
+		display.write("I2C:");
 
 		display.setCursor(0, 56);
 		memcpy(buf, sysPageMenu, sizeof(sysPageMenu));
@@ -132,6 +132,12 @@ bool JSBLocalDisplayClass::Test()
 	{
 		return false;
 	}
+
+	//// Check whether we can use WriteError as a means of detecting whether the display is connected and responsive
+	//if (display.getWriteError() < 0)
+	//{
+	//	return false;
+	//}
 	
 	display.clearDisplay();					// Clear the buffer
 	display.setTextSize(1);					// Normal 1:1 pixel scale

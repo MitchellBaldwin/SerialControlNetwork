@@ -22,7 +22,7 @@
 
 // Connect Trellis Vin to 5V and Ground to ground
 // Connect the INT wire to pin #A2 (can change later!):
-#define TRELLISINTPIN A2
+#define TRELLISINTPIN 4		// GPIO4
 // Connect I2C SDA pin to your Arduino SDA line
 // Connect I2C SCL pin to your Arduino SCL line
 // All Trellises share the SDA, SCL and INT pin! 

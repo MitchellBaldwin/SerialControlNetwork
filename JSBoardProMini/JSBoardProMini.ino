@@ -22,37 +22,25 @@ void ReadAndUpdateControls(void)
 {
 	ReadJoysticks();
 	
-	JSBLocalDisplay.Update();
-	
-	// If a button was just pressed or released...
-	if (TrellisKeypad.Keypad.readSwitches()) {
-		// go through every button
-		for (uint8_t i = 0; i < numKeys; i++) {
-			// if it was pressed...
-			if (TrellisKeypad.Keypad.justPressed(i)) {
-				Serial.print("v"); Serial.println(i);
-				// Alternate the LED
-				if (TrellisKeypad.Keypad.isLED(i))
-					TrellisKeypad.Keypad.clrLED(i);
-				else
-					TrellisKeypad.Keypad.setLED(i);
-				if (i == 0)
-				{
-					JSBLocalDisplay.Control(JSBLocalDisplayClass::Clear);
-				}
-				else if (i == 1)
-				{
-					JSBLocalDisplay.Control(JSBLocalDisplayClass::SYSPage);
-				}
-				else if (i == 2)
-				{
-					JSBLocalDisplay.Control(JSBLocalDisplayClass::POWPage);
-				}
-			}
+	if (TrellisKeypad.KeyPressed())
+	{
+		switch (TrellisKeypad.GetLastKeyPressed())
+		{
+			case 0:
+				JSBLocalDisplay.Control(JSBLocalDisplayClass::Clear);
+				break;
+			case 1:
+				JSBLocalDisplay.Control(JSBLocalDisplayClass::SYSPage);
+				break;
+			case 2:
+				JSBLocalDisplay.Control(JSBLocalDisplayClass::POWPage);
+				break;
+			default:
+				break;
 		}
-		// tell the trellis to set the LEDs we requested
-		TrellisKeypad.Keypad.writeDisplay();
 	}
+	
+	JSBLocalDisplay.Update();
 }
 
 void ReadJoysticks()
@@ -79,9 +67,9 @@ void setup() {
 	pinMode(DRVJSBTNPIN, INPUT_PULLUP);		// Check whther joystick buttons have their own pull-up resistors
 	pinMode(PTJSBTNPIN, INPUT_PULLUP);
 
-	JSBLocalDisplay.Init(LOCALDISPLAY_I2C_ADDRESS);
 	// Normal operation; blink LED at 0.5 Hz:
 	int16_t BuiltinLEDOnTime = 1000;
+	JSBLocalDisplay.Init(LOCALDISPLAY_I2C_ADDRESS);
 	//if (!JSBLocalDisplay.Test())
 	//{
 	//	// Local display initialization failed; blink LED at 2 Hz:
@@ -93,15 +81,11 @@ void setup() {
 	while (!Serial);
 	Serial.println(F("JS Board"));
 
-	Serial.print(F("Free memory = "));
-	Serial.println(getFreeMemory());
-
 	TrellisKeypad.Init();
+	TrellisKeypad.Test();
 
 	Serial.print(F("Free memory = "));
 	Serial.println(getFreeMemory());
-
-	TrellisKeypad.Test();
 
 	Tasks_Init();
 	Tasks_Add((Task)BuiltinLEDToggle, BuiltinLEDOnTime, 0);
