@@ -29,6 +29,7 @@ class JSPktClass
 	 int16_t DrvJSY;
 	 int16_t PTJSX;
 	 int16_t PTJSY;
+	 int16_t DFR4x4KPRaw;
 	 uint16_t ButtonStates;
 
 

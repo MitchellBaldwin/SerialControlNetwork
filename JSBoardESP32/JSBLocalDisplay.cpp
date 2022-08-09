@@ -22,8 +22,6 @@ void JSBLocalDisplayClass::DrawSYSPage()
 		memcpy(buf, sysPageTitle, sizeof(sysPageTitle));
 		display.write(buf);
 
-		display.setCursor(0, 32);
-		display.write("KP");
 		display.setCursor(0, 40);
 		display.write("HWS:");
 		display.setCursor(64, 40);
@@ -46,6 +44,11 @@ void JSBLocalDisplayClass::DrawSYSPage()
 	display.fillRect(0, 24, 128, 8, 0x0000);
 	snprintf(buf, 22, "L/R %+04d     L/R %+04d", JSPkt.PTJSX, JSPkt.DrvJSX);
 	display.setCursor(0, 24);
+	display.write(buf);
+
+	display.fillRect(0, 32, 128, 8, SSD1306_BLACK);
+	snprintf(buf, 22, "KP %05d", JSPkt.DFR4x4KPRaw);
+	display.setCursor(0, 32);
 	display.write(buf);
 
 	display.display();

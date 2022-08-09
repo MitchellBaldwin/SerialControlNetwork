@@ -59,6 +59,8 @@ constexpr auto DrvJSYPin = 33;
 constexpr auto PTJSXPin = 34;
 constexpr auto PTJSYPin = 35;
 
+constexpr auto DFR4x4KPPin = 36;
+
 constexpr auto LocalDisplayI2CAddress = 0x3C;
 
 uint32_t lastMillis;
@@ -109,10 +111,12 @@ void ToggleBuiltinLEDCallback()
 
 void ReadAndUpdateControlsCallback()
 {
-	(JSPkt.DrvJSX = analogRead(DrvJSXPin) - 2048) / 4;
-	(JSPkt.DrvJSY = analogRead(DrvJSYPin) - 2048) / 4;
-	(JSPkt.PTJSX = analogRead(PTJSXPin) - 2048) / 4;
-	(JSPkt.PTJSY = analogRead(PTJSYPin) - 2048) / 4;
+	JSPkt.DrvJSX = (analogRead(DrvJSXPin) - 2048) / 4;
+	JSPkt.DrvJSY = (analogRead(DrvJSYPin) - 2048) / 4;
+	JSPkt.PTJSX = (analogRead(PTJSXPin) - 2048) / 4;
+	JSPkt.PTJSY = (analogRead(PTJSYPin) - 2048) / 4;
+
+	JSPkt.DFR4x4KPRaw = analogRead(DFR4x4KPPin);
 
 	if (TrellisKeypad.KeyPressed())
 	{
