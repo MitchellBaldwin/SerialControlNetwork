@@ -9,7 +9,7 @@
 
 #include "TrellisKeypad.h"
 
-void TrellisKeypadClass::Init()
+void TrellisKeypadClass::Init(uint8_t address)
 {
 	// Initialize Trellis INT pin; requires a pullup
 	pinMode(TRELLISINTPIN, INPUT);
@@ -18,12 +18,17 @@ void TrellisKeypadClass::Init()
 	// Create single instance of the Trellis keypad class
 	Keypad = Adafruit_Trellis();
 
-	TrellisKeypad.Keypad.begin(0x70);  // only one
+	I2CAddress = address;
+	Keypad.begin(I2CAddress);  // only one
 	
 }
 
 bool TrellisKeypadClass::Test()
 {
+	Wire.beginTransmission(I2CAddress);
+	bool error = Wire.endTransmission();
+	if (error) return false;
+
 	// light up all the LEDs in order
 	for (uint8_t i = 0; i < numKeys; i++) {
 		Keypad.setLED(i);
@@ -42,31 +47,41 @@ bool TrellisKeypadClass::Test()
 
 bool TrellisKeypadClass::KeyPressed()
 {
+	bool newKeyPressed = false;
 	// If a button was just pressed or released...
-	if (Keypad.readSwitches()) {
+	if (Keypad.readSwitches())
+	{
 		// go through every button
 		for (uint8_t i = 0; i < numKeys; i++) {
 			// if it was pressed...
 			if (Keypad.justPressed(i)) {
-				//Serial.print("v"); Serial.println(i);
-				// Alternate the LED
+				// Toggle the LED for the key just pressed:
 				if (Keypad.isLED(i))
 					Keypad.clrLED(i);
 				else
 					Keypad.setLED(i);
+				newKeyPressed = true;
 				lastKeyPressed = i;
 			}
 		}
-		// tell the trellis to set the LEDs we requested
+		//// DEBUG - Show key code in serial monitor:
+		////String keypadMessage = "Key pressed: " + lastKeyPressed;
+		//if (newKeyPressed)
+		//{
+		//	Serial.printf("Key pressed: %d", lastKeyPressed);
+		//	Serial.println();
+
+		//}
+
+		// Tell the trellis to set the LEDs we requested
 		Keypad.writeDisplay();
-		return true;
 	}
-	else return false;
+	return newKeyPressed;
 }
 
-uint8_t TrellisKeypadClass::GetLastKeyPressed()
+JSBKeypadClass::KeyTypes TrellisKeypadClass::GetLastKeyPressed()
 {
-	return lastKeyPressed;
+	return (KeyTypes)lastKeyPressed;
 }
 
 

@@ -90,11 +90,8 @@ void JSBLocalDisplayClass::DrawCOMPage()
 void JSBLocalDisplayClass::DrawNONEPage()
 {
 	currentPage = NONE;
-	if (lastPage != NONE)
-	{
-		display.clearDisplay();
-		lastPage = NONE;
-	}
+	display.clearDisplay();
+	lastPage = NONE;
 	display.display();
 }
 
@@ -131,10 +128,9 @@ void JSBLocalDisplayClass::Init(uint8_t address)
 
 bool JSBLocalDisplayClass::Test()
 {
-	if (!display.begin(SSD1306_SWITCHCAPVCC, I2CAddress))
-	{
-		return false;
-	}
+	Wire.beginTransmission(I2CAddress);
+	bool error = Wire.endTransmission();
+	if (error) return false;
 
 	//// Check whether we can use WriteError as a means of detecting whether the display is connected and responsive
 	//if (display.getWriteError() < 0)

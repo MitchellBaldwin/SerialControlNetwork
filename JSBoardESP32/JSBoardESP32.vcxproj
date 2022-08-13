@@ -115,6 +115,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="JSBGlobals.h" />
+    <ClInclude Include="JSBKeypad.h" />
     <ClInclude Include="JSBLocalDisplay.h" />
     <ClInclude Include="JSPkt.h" />
     <ClInclude Include="LEDControl.h" />
@@ -122,6 +123,7 @@
     <ClInclude Include="__vm\.JSBoardESP32.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="JSBKeypad.cpp" />
     <ClCompile Include="JSBLocalDisplay.cpp" />
     <ClCompile Include="JSPkt.cpp" />
     <ClCompile Include="LEDControl.cpp" />

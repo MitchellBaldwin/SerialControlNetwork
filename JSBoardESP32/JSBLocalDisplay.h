@@ -38,6 +38,11 @@
 // On an arduino LEONARDO:   2(SDA),  3(SCL), ...
 #define OLED_RESET     -1	// Reset pin # (or -1 if sharing Arduino reset pin)
 
+const char sysPageTitle[] = "MRS RC CSS JSB System";
+const char sysPageMenu[] = "<NONE    SYS     POW>";
+const char powPageTitle[] = "MRS RC CSS JSB Power";
+const char powPageMenu[] = "<SYS     POW     COM>";
+
 class JSBLocalDisplayClass
 {
  protected:

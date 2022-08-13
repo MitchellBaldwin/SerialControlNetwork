@@ -7,6 +7,7 @@
 *	v
 *
 */
+#include "JSBKeypad.h"
 #include <I2CScanner.h>
 #include "TrellisKeypad.h"
 #include "JSBLocalDisplay.h"
@@ -33,9 +34,11 @@
 #ifdef _DEBUG_
 #define _PP(a) Serial.print(a);
 #define _PL(a) Serial.println(a);
+#define _PLH(a) Serial.println(a, HEX);
 #else
 #define _PP(a)
 #define _PL(a)
+#define _PLH(a)
 #endif
 
 constexpr auto BuiltinLEDTogglePeriod = 500;
@@ -62,8 +65,35 @@ constexpr auto PTJSYPin = 35;
 constexpr auto DFR4x4KPPin = 36;
 
 constexpr auto LocalDisplayI2CAddress = 0x3C;
+constexpr auto TrellisKeypadI2CAddress = 0x70;
 
-uint32_t lastMillis;
+I2CScanner i2CScanner;
+uint8_t activeI2CAddresses[3];
+
+uint8_t ScanI2CAddress(uint8_t address)
+{
+	Wire.beginTransmission(address);
+	uint8_t error = Wire.endTransmission();
+	return error;
+}
+
+void ScanI2CBus()
+{
+	//i2CScanner.Init();
+	for (uint8_t i = i2CScanner.Low_Address; i <= i2CScanner.High_Address; ++i)
+	{
+		i2CScanner.Devices_Count = 0;
+		if (!ScanI2CAddress(i))
+		{
+			activeI2CAddresses[i2CScanner.Devices_Count];
+			i2CScanner.Devices_Count++;
+			_PLH(i);
+			if (i2CScanner.Devices_Count >= 3) exit;
+		}
+	}
+}
+
+//uint32_t lastMillis;
 
 void setup() 
 {
@@ -74,24 +104,36 @@ void setup()
 #if defined(_DEBUG_) || defined(_TEST_)
 	Serial.begin(115200);
 	while (!Serial);
-	_PL(F("\nJS Board ESP32"));
+	_PL(F("\nJS Board ESP32 setup"));
 #endif
 
 	// Normal operation; blink LED at 0.5 Hz:
 	int16_t BuiltinLEDOnTime = 1000;
 	JSBLocalDisplay.Init(LocalDisplayI2CAddress);
-	if (!JSBLocalDisplay.Test())
+	if (JSBLocalDisplay.Test())
+	{
+		_PL("Local display initialized and OK");
+	}
+	else 
 	{
 		// Local display initialization failed; blink LED at 2 Hz:
 		BuiltinLEDOnTime = 250;
+		_PL("Local display not responding");
 	}
+
+	TrellisKeypad.Init(TrellisKeypadI2CAddress);
+	if (TrellisKeypad.Test())
+	{
+		_PL("Trellis keypad initialized and OK");
+	}
+	else
+	{
+		BuiltinLEDOnTime = 250;
+		_PL("Trellis keypad not responding");
+	}
+
+	//lastMillis = millis();
 	taskToggleBuiltinLED.setInterval(BuiltinLEDOnTime);
-	//JSBLocalDisplay.Control(JSBLocalDisplayClass::SYSPage);
-
-	TrellisKeypad.Init();
-	TrellisKeypad.Test();
-
-	lastMillis = millis();
 
 	taskToggleBuiltinLED.enable();
 	taskReadAndUpdateControls.enable();
@@ -111,26 +153,38 @@ void ToggleBuiltinLEDCallback()
 
 void ReadAndUpdateControlsCallback()
 {
+	//JSPkt.DFR4x4KPRaw = analogRead(DFR4x4KPPin);
+	JSPkt.DFR4x4KPRaw = analogRead(PTJSXPin);
+
 	JSPkt.DrvJSX = (analogRead(DrvJSXPin) - 2048) / 4;
 	JSPkt.DrvJSY = (analogRead(DrvJSYPin) - 2048) / 4;
-	JSPkt.PTJSX = (analogRead(PTJSXPin) - 2048) / 4;
+	JSPkt.PTJSX = (JSPkt.DFR4x4KPRaw - 2048) / 4;
 	JSPkt.PTJSY = (analogRead(PTJSYPin) - 2048) / 4;
-
-	JSPkt.DFR4x4KPRaw = analogRead(DFR4x4KPPin);
 
 	if (TrellisKeypad.KeyPressed())
 	{
 		switch (TrellisKeypad.GetLastKeyPressed())
 		{
-		case 0:
+		case JSBKeypadClass::ClearKey:
 			JSBLocalDisplay.Control(JSBLocalDisplayClass::Clear);
 			break;
-		case 1:
+		case JSBKeypadClass::SystemKey:
 			JSBLocalDisplay.Control(JSBLocalDisplayClass::SYSPage);
 			break;
-		case 2:
+		case JSBKeypadClass::PowerKey:
 			JSBLocalDisplay.Control(JSBLocalDisplayClass::POWPage);
 			break;
+		case JSBKeypadClass::CommsKey:
+			JSBLocalDisplay.Control(JSBLocalDisplayClass::COMPage);
+			break;
+
+		case JSBKeypadClass::I2CKey:
+			// Execute I2C bus scan
+			ScanI2CBus();
+			// Display I2C page on LocalDisplay
+
+			break;
+
 		default:
 			break;
 		}
