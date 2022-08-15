@@ -37,7 +37,7 @@ class TrellisKeypadClass: public JSBKeypadClass
 protected:
 	uint8_t I2CAddress = 0x00;
 	uint8_t lastKeyPressed;
-
+	bool toggelKeyLEDs = false;
 
 public:
 	 
@@ -46,6 +46,12 @@ public:
 	bool Test();
 	bool KeyPressed();
 	KeyTypes GetLastKeyPressed();
+	void SetLEDToggleState(bool newState);
+	bool GetLEDToggleState();
+	void ClearAllKeyLEDs();
+	void SetAllKeyLEDs();
+	void ClearKeyLED(uint8_t ledNumber);
+	void SetKeyLED(uint8_t ledNumber);
 };
 
 extern TrellisKeypadClass TrellisKeypad;

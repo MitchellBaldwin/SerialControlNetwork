@@ -6,6 +6,7 @@
 */
 
 #include "JSBGlobals.h"
+#include "I2CBus.h"
 #include "JSBLocalDisplay.h"
 
 void JSBLocalDisplayClass::DrawSYSPage()
@@ -27,7 +28,8 @@ void JSBLocalDisplayClass::DrawSYSPage()
 		display.setCursor(64, 40);
 		display.write("SWS:");
 		display.setCursor(0, 48);
-		display.write("I2C:");
+		snprintf(buf, 22, "I2C %02X %02X %02X", I2CBus.ActiveI2CDeviceAddresses[0], I2CBus.ActiveI2CDeviceAddresses[1], I2CBus.ActiveI2CDeviceAddresses[2]);
+		display.write(buf);
 
 		display.setCursor(0, 56);
 		memcpy(buf, sysPageMenu, sizeof(sysPageMenu));
@@ -47,7 +49,7 @@ void JSBLocalDisplayClass::DrawSYSPage()
 	display.write(buf);
 
 	display.fillRect(0, 32, 128, 8, SSD1306_BLACK);
-	snprintf(buf, 22, "KP %05d", JSPkt.DFR4x4KPRaw);
+	snprintf(buf, 22, "KP %05d", JSPkt.RD4x4KPRaw);
 	display.setCursor(0, 32);
 	display.write(buf);
 
@@ -85,6 +87,41 @@ void JSBLocalDisplayClass::DrawPOWPage()
 
 void JSBLocalDisplayClass::DrawCOMPage()
 {
+}
+
+void JSBLocalDisplayClass::DrawI2CPage()
+{
+	currentPage = I2C;
+
+	if (lastPage != currentPage)
+	{
+		// Clear display and redraw static elements of the page format:
+		display.clearDisplay();
+		display.setCursor(0, 0);
+		display.cp437();
+		display.setTextSize(1);
+		memcpy(buf, i2cPageTitle, sizeof(i2cPageTitle));
+		display.write(buf);
+
+		display.setCursor(0, 40);
+
+		display.setCursor(64, 40);
+
+		display.setCursor(0, 48);
+		snprintf(buf, 22, "I2C %02X %02X %02X %02X", I2CBus.ActiveI2CDeviceAddresses[0], I2CBus.ActiveI2CDeviceAddresses[1], I2CBus.ActiveI2CDeviceAddresses[2], I2CBus.ActiveI2CDeviceAddresses[3]);
+		display.write(buf);
+
+		display.setCursor(0, 56);
+		memcpy(buf, i2cPageMenu, sizeof(i2cPageMenu));
+		display.write(buf);
+
+		lastPage = currentPage;
+	}
+
+	// Update dynamic displays:
+
+
+	display.display();
 }
 
 void JSBLocalDisplayClass::DrawNONEPage()
@@ -155,6 +192,7 @@ bool JSBLocalDisplayClass::Test()
 			else					display.write(charCode);
 		}
 	display.display();
+	//delay(2000); // Pause for 2 seconds
 
 	return true;
 }
@@ -166,9 +204,16 @@ void JSBLocalDisplayClass::Update()
 		case SYS :
 			DrawSYSPage();
 			break;
-		case POW :
+		case POW:
 			DrawPOWPage();
 			break;
+		case COM:
+			DrawCOMPage();
+			break;
+		case I2C:
+			DrawI2CPage();
+			break;
+
 		default :
 			DrawNONEPage();
 	}
@@ -195,6 +240,10 @@ void JSBLocalDisplayClass::Control(uint8_t command)
 		case COMPage:
 			DrawCOMPage();
 			break;
+		case I2CPage:
+			DrawI2CPage();
+			break;
+
 		default:
 			return;
 	}

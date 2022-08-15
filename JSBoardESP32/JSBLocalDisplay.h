@@ -42,6 +42,10 @@ const char sysPageTitle[] = "MRS RC CSS JSB System";
 const char sysPageMenu[] = "<NONE    SYS     POW>";
 const char powPageTitle[] = "MRS RC CSS JSB Power";
 const char powPageMenu[] = "<SYS     POW     COM>";
+const char comPageTitle[] = "MRS RC CSS JSB Comms";
+const char comPageMenu[] = "<POW     COM     I2C>";
+const char i2cPageTitle[] = "MRS RC CSS   JSB I2C";
+const char i2cPageMenu[] = "<COM     I2C     nxt>";
 
 class JSBLocalDisplayClass
 {
@@ -54,6 +58,8 @@ class JSBLocalDisplayClass
 	 {
 		 SYS,
 		 POW,
+		 COM,
+		 I2C,
 
 		 NONE
 	 };
@@ -63,6 +69,7 @@ class JSBLocalDisplayClass
 	 void DrawSYSPage();
 	 void DrawPOWPage();
 	 void DrawCOMPage();
+	 void DrawI2CPage();
 
 	 void DrawNONEPage();
 
@@ -74,6 +81,7 @@ class JSBLocalDisplayClass
 		 SYSPage,
 		 POWPage,
 		 COMPage,
+		 I2CPage,
 		 Prev,
 		 Next,
 

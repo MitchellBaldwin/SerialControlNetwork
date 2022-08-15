@@ -7,8 +7,9 @@
 *	v
 *
 */
+//#include <I2CScanner.h>
+#include "I2CBus.h"
 #include "JSBKeypad.h"
-#include <I2CScanner.h>
 #include "TrellisKeypad.h"
 #include "JSBLocalDisplay.h"
 #include <TaskSchedulerSleepMethods.h>
@@ -67,32 +68,7 @@ constexpr auto DFR4x4KPPin = 36;
 constexpr auto LocalDisplayI2CAddress = 0x3C;
 constexpr auto TrellisKeypadI2CAddress = 0x70;
 
-I2CScanner i2CScanner;
-uint8_t activeI2CAddresses[3];
-
-uint8_t ScanI2CAddress(uint8_t address)
-{
-	Wire.beginTransmission(address);
-	uint8_t error = Wire.endTransmission();
-	return error;
-}
-
-void ScanI2CBus()
-{
-	//i2CScanner.Init();
-	for (uint8_t i = i2CScanner.Low_Address; i <= i2CScanner.High_Address; ++i)
-	{
-		i2CScanner.Devices_Count = 0;
-		if (!ScanI2CAddress(i))
-		{
-			activeI2CAddresses[i2CScanner.Devices_Count];
-			i2CScanner.Devices_Count++;
-			_PLH(i);
-			if (i2CScanner.Devices_Count >= 3) exit;
-		}
-	}
-}
-
+//DEBUG - Test accuracy of the Task Scheduler:
 //uint32_t lastMillis;
 
 void setup() 
@@ -106,6 +82,9 @@ void setup()
 	while (!Serial);
 	_PL(F("\nJS Board ESP32 setup"));
 #endif
+
+	I2CBus.Init();
+	//I2CBus.Scan();
 
 	// Normal operation; blink LED at 0.5 Hz:
 	int16_t BuiltinLEDOnTime = 1000;
@@ -124,14 +103,17 @@ void setup()
 	TrellisKeypad.Init(TrellisKeypadI2CAddress);
 	if (TrellisKeypad.Test())
 	{
+		//TrellisKeypad.SetLEDToggleState(true);
 		_PL("Trellis keypad initialized and OK");
 	}
 	else
 	{
-		BuiltinLEDOnTime = 250;
+		// Trellis keypad initialization failed; blink LED at 1 Hz:
+		BuiltinLEDOnTime = 500;
 		_PL("Trellis keypad not responding");
 	}
 
+	//DEBUG - Test accuracy of the Task Scheduler:
 	//lastMillis = millis();
 	taskToggleBuiltinLED.setInterval(BuiltinLEDOnTime);
 
@@ -148,17 +130,18 @@ void loop()
 void ToggleBuiltinLEDCallback()
 {
 	digitalWrite(BuiltinLEDPin, !digitalRead(BuiltinLEDPin));
+	//DEBUG - Test accuracy of the Task Scheduler:
 	//_PL(millis() - lastMillis);
 }
 
 void ReadAndUpdateControlsCallback()
 {
-	//JSPkt.DFR4x4KPRaw = analogRead(DFR4x4KPPin);
-	JSPkt.DFR4x4KPRaw = analogRead(PTJSXPin);
+	//JSPkt.RD4x4KPRaw = analogRead(DFR4x4KPPin);
+	JSPkt.RD4x4KPRaw = analogRead(PTJSXPin);
 
 	JSPkt.DrvJSX = (analogRead(DrvJSXPin) - 2048) / 4;
 	JSPkt.DrvJSY = (analogRead(DrvJSYPin) - 2048) / 4;
-	JSPkt.PTJSX = (JSPkt.DFR4x4KPRaw - 2048) / 4;
+	JSPkt.PTJSX = (JSPkt.RD4x4KPRaw - 2048) / 4;
 	JSPkt.PTJSY = (analogRead(PTJSYPin) - 2048) / 4;
 
 	if (TrellisKeypad.KeyPressed())
@@ -170,19 +153,28 @@ void ReadAndUpdateControlsCallback()
 			break;
 		case JSBKeypadClass::SystemKey:
 			JSBLocalDisplay.Control(JSBLocalDisplayClass::SYSPage);
+			TrellisKeypad.SetKeyLED(JSBKeypadClass::SystemKey);
 			break;
 		case JSBKeypadClass::PowerKey:
 			JSBLocalDisplay.Control(JSBLocalDisplayClass::POWPage);
+			TrellisKeypad.SetKeyLED(JSBKeypadClass::PowerKey);
 			break;
 		case JSBKeypadClass::CommsKey:
 			JSBLocalDisplay.Control(JSBLocalDisplayClass::COMPage);
+			TrellisKeypad.SetKeyLED(JSBKeypadClass::CommsKey);
 			break;
 
 		case JSBKeypadClass::I2CKey:
 			// Execute I2C bus scan
-			ScanI2CBus();
+			I2CBus.Scan();
+			// DEBUG Show I2C devices found in serial monitor
+			for (uint8_t i = 0x00; i < I2CBus.I2CDeviceCount; ++i)
+			{
+				_PLH(I2CBus.ActiveI2CDeviceAddresses[i]);
+			}
 			// Display I2C page on LocalDisplay
-
+			JSBLocalDisplay.Control(JSBLocalDisplayClass::I2CPage);
+			TrellisKeypad.SetKeyLED(JSBKeypadClass::I2CKey);
 			break;
 
 		default:

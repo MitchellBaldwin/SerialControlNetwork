@@ -55,11 +55,16 @@ bool TrellisKeypadClass::KeyPressed()
 		for (uint8_t i = 0; i < numKeys; i++) {
 			// if it was pressed...
 			if (Keypad.justPressed(i)) {
-				// Toggle the LED for the key just pressed:
-				if (Keypad.isLED(i))
-					Keypad.clrLED(i);
-				else
-					Keypad.setLED(i);
+				if (toggelKeyLEDs)
+				{
+					// Toggle the LED for the key just pressed:
+					if (Keypad.isLED(i))
+						Keypad.clrLED(i);
+					else
+						Keypad.setLED(i);
+					// Tell the trellis to set the LEDs we requested
+					Keypad.writeDisplay();
+				}
 				newKeyPressed = true;
 				lastKeyPressed = i;
 			}
@@ -70,11 +75,8 @@ bool TrellisKeypadClass::KeyPressed()
 		//{
 		//	Serial.printf("Key pressed: %d", lastKeyPressed);
 		//	Serial.println();
-
 		//}
 
-		// Tell the trellis to set the LEDs we requested
-		Keypad.writeDisplay();
 	}
 	return newKeyPressed;
 }
@@ -84,6 +86,43 @@ JSBKeypadClass::KeyTypes TrellisKeypadClass::GetLastKeyPressed()
 	return (KeyTypes)lastKeyPressed;
 }
 
+void TrellisKeypadClass::SetLEDToggleState(bool newState)
+{
+	toggelKeyLEDs = newState;
+}
+
+bool TrellisKeypadClass::GetLEDToggleState()
+{
+	return toggelKeyLEDs;
+}
+
+void TrellisKeypadClass::ClearAllKeyLEDs()
+{
+	for (uint8_t i = 0; i < numKeys; i++) {
+		Keypad.clrLED(i);
+	}
+	Keypad.writeDisplay();
+}
+
+void TrellisKeypadClass::SetAllKeyLEDs()
+{
+	for (uint8_t i = 0; i < numKeys; i++) {
+		Keypad.setLED(i);
+	}
+	Keypad.writeDisplay();
+}
+
+void TrellisKeypadClass::ClearKeyLED(uint8_t ledNumber)
+{
+	Keypad.clrLED(ledNumber);
+	Keypad.writeDisplay();
+}
+
+void TrellisKeypadClass::SetKeyLED(uint8_t ledNumber)
+{
+	Keypad.setLED(ledNumber);
+	Keypad.writeDisplay();
+}
 
 TrellisKeypadClass TrellisKeypad;
 
