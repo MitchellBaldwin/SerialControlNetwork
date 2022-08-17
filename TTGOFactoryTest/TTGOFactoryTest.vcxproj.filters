@@ -21,16 +21,8 @@
     <ClInclude Include="__vm\.TTGOFactoryTest.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Users\mitch\OneDrive\Documents\Arduino\libraries\TFT_eSPI\examples\FactoryTest\bmp.h">
+    <ClInclude Include="bmp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Users\mitch\OneDrive\Documents\Arduino\libraries\TFT_eSPI\examples\FactoryTest\Button2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\..\Users\mitch\OneDrive\Documents\Arduino\libraries\TFT_eSPI\examples\FactoryTest\Button2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>
