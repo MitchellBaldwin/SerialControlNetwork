@@ -170,6 +170,10 @@ void wifi_scan()
 		}
 	}
 	// WiFi.mode(WIFI_OFF);
+	String macAddress = WiFi.macAddress();
+	Serial.println(macAddress);
+	sprintf(buff, "MAC: %s", macAddress.c_str());
+	tft.println(buff);
 }
 
 void setup()
@@ -206,7 +210,7 @@ void setup()
 	espDelay(5000);
 
 
-	tft.setRotation(0);
+	tft.setRotation(1);
 	tft.fillScreen(TFT_RED);
 	espDelay(1000);
 	tft.fillScreen(TFT_BLUE);

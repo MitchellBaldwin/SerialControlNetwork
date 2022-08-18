@@ -7,7 +7,6 @@
 *	v
 *
 */
-//#include <I2CScanner.h>
 #include "I2CBus.h"
 #include "JSBKeypad.h"
 #include "TrellisKeypad.h"
@@ -84,7 +83,7 @@ void setup()
 #endif
 
 	I2CBus.Init();
-	//I2CBus.Scan();
+	I2CBus.Scan();
 
 	// Normal operation; blink LED at 0.5 Hz:
 	int16_t BuiltinLEDOnTime = 1000;
@@ -150,17 +149,21 @@ void ReadAndUpdateControlsCallback()
 		{
 		case JSBKeypadClass::ClearKey:
 			JSBLocalDisplay.Control(JSBLocalDisplayClass::Clear);
+			TrellisKeypad.ClearAllKeyLEDs();
 			break;
 		case JSBKeypadClass::SystemKey:
 			JSBLocalDisplay.Control(JSBLocalDisplayClass::SYSPage);
+			TrellisKeypad.ClearAllKeyLEDs();
 			TrellisKeypad.SetKeyLED(JSBKeypadClass::SystemKey);
 			break;
 		case JSBKeypadClass::PowerKey:
 			JSBLocalDisplay.Control(JSBLocalDisplayClass::POWPage);
+			TrellisKeypad.ClearAllKeyLEDs();
 			TrellisKeypad.SetKeyLED(JSBKeypadClass::PowerKey);
 			break;
 		case JSBKeypadClass::CommsKey:
 			JSBLocalDisplay.Control(JSBLocalDisplayClass::COMPage);
+			TrellisKeypad.ClearAllKeyLEDs();
 			TrellisKeypad.SetKeyLED(JSBKeypadClass::CommsKey);
 			break;
 
@@ -174,6 +177,7 @@ void ReadAndUpdateControlsCallback()
 			}
 			// Display I2C page on LocalDisplay
 			JSBLocalDisplay.Control(JSBLocalDisplayClass::I2CPage);
+			TrellisKeypad.ClearAllKeyLEDs();
 			TrellisKeypad.SetKeyLED(JSBKeypadClass::I2CKey);
 			break;
 
