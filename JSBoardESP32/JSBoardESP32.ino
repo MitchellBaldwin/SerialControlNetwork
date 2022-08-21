@@ -7,6 +7,7 @@
 *	v
 *
 */
+#include <SparkFun_Qwiic_Joystick_Arduino_Library.h>
 #include "I2CBus.h"
 #include "JSBKeypad.h"
 #include "TrellisKeypad.h"
@@ -76,6 +77,8 @@ void setup()
 	pinMode(GreenLEDPin, OUTPUT);
 	pinMode(BuiltinLEDPin, OUTPUT);
 
+	pinMode(DFR4x4KPPin, INPUT);
+
 #if defined(_DEBUG_) || defined(_TEST_)
 	Serial.begin(115200);
 	while (!Serial);
@@ -136,11 +139,11 @@ void ToggleBuiltinLEDCallback()
 void ReadAndUpdateControlsCallback()
 {
 	//JSPkt.RD4x4KPRaw = analogRead(DFR4x4KPPin);
-	JSPkt.RD4x4KPRaw = analogRead(PTJSXPin);
+	JSPkt.RD4x4KPRaw = analogRead(DFR4x4KPPin);
 
 	JSPkt.DrvJSX = (analogRead(DrvJSXPin) - 2048) / 4;
 	JSPkt.DrvJSY = (analogRead(DrvJSYPin) - 2048) / 4;
-	JSPkt.PTJSX = (JSPkt.RD4x4KPRaw - 2048) / 4;
+	JSPkt.PTJSX = (analogRead(PTJSXPin) - 2048) / 4;
 	JSPkt.PTJSY = (analogRead(PTJSYPin) - 2048) / 4;
 
 	if (TrellisKeypad.KeyPressed())

@@ -38,14 +38,14 @@
 // On an arduino LEONARDO:   2(SDA),  3(SCL), ...
 #define OLED_RESET     -1	// Reset pin # (or -1 if sharing Arduino reset pin)
 
-const char sysPageTitle[] = "MRS RC CSS JSB System";
-const char sysPageMenu[] = "<NONE    SYS     POW>";
-const char powPageTitle[] = "MRS RC CSS JSB Power";
-const char powPageMenu[] = "<SYS     POW     COM>";
-const char comPageTitle[] = "MRS RC CSS JSB Comms";
-const char comPageMenu[] = "<POW     COM     I2C>";
-const char i2cPageTitle[] = "MRS RC CSS   JSB I2C";
-const char i2cPageMenu[] = "<COM     I2C     nxt>";
+//const char sysPageTitle[] = "MRS RC CSS JSB System";
+//const char sysPageMenu[] = "<NONE    SYS     POW>";
+//const char powPageTitle[] = "MRS RC CSS JSB Power";
+//const char powPageMenu[] = "<SYS     POW     COM>";
+//const char comPageTitle[] = "MRS RC CSS JSB Comms";
+//const char comPageMenu[] = "<POW     COM     I2C>";
+//const char i2cPageTitle[] = "MRS RC CSS   JSB I2C";
+//const char i2cPageMenu[] = "<COM     I2C     nxt>";
 
 class JSBLocalDisplayClass
 {
@@ -66,6 +66,24 @@ class JSBLocalDisplayClass
 	 Pages currentPage = SYS;
 	 Pages lastPage = NONE;		// Aid to determine when a complete page redraw is needed
 
+	 const char *PageTitles[NONE] =
+	 {
+		 "MRS RC CSS JSB System",
+		 "MRS RC CSS JSB Power",
+		 "MRS RC CSS JSB Comms",
+		 "MRS RC CSS   JSB I2C",
+
+	 };
+
+	 const char *PageMenus[NONE] =
+	 {
+		 "<NONE    SYS     POW>",
+		 "<SYS     POW     COM>",
+		 "<POW     COM     I2C>",
+		 "<COM     I2C     nxt>",
+
+	 };
+	 
 	 void DrawSYSPage();
 	 void DrawPOWPage();
 	 void DrawCOMPage();
