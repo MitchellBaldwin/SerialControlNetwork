@@ -84,6 +84,7 @@ class JSBLocalDisplayClass
 
 	 };
 	 
+	 void DrawPageHeaderAndFooter();
 	 void DrawSYSPage();
 	 void DrawPOWPage();
 	 void DrawCOMPage();

@@ -63,7 +63,10 @@ constexpr auto DrvJSYPin = 33;
 constexpr auto PTJSXPin = 34;
 constexpr auto PTJSYPin = 35;
 
-constexpr auto DFR4x4KPPin = 36;
+constexpr auto VInPin = 36;
+
+constexpr auto DrvJSI2CAddress = 0x21;
+constexpr auto PTJSI2CAddress = 0x22;
 
 constexpr auto LocalDisplayI2CAddress = 0x3C;
 constexpr auto TrellisKeypadI2CAddress = 0x70;
@@ -71,13 +74,16 @@ constexpr auto TrellisKeypadI2CAddress = 0x70;
 //DEBUG - Test accuracy of the Task Scheduler:
 //uint32_t lastMillis;
 
+JOYSTICK DrvJoystick;
+JOYSTICK PTJoystick;
+
 void setup() 
 {
 	pinMode(BlueLEDPin, OUTPUT);
 	pinMode(GreenLEDPin, OUTPUT);
 	pinMode(BuiltinLEDPin, OUTPUT);
 
-	pinMode(DFR4x4KPPin, INPUT);
+	pinMode(VInPin, INPUT);
 
 #if defined(_DEBUG_) || defined(_TEST_)
 	Serial.begin(115200);
@@ -115,6 +121,9 @@ void setup()
 		_PL("Trellis keypad not responding");
 	}
 
+	DrvJoystick.begin(Wire, DrvJSI2CAddress);
+	PTJoystick.begin(Wire, PTJSI2CAddress);
+	
 	//DEBUG - Test accuracy of the Task Scheduler:
 	//lastMillis = millis();
 	taskToggleBuiltinLED.setInterval(BuiltinLEDOnTime);
@@ -138,13 +147,21 @@ void ToggleBuiltinLEDCallback()
 
 void ReadAndUpdateControlsCallback()
 {
-	//JSPkt.RD4x4KPRaw = analogRead(DFR4x4KPPin);
-	JSPkt.RD4x4KPRaw = analogRead(DFR4x4KPPin);
+	JSPkt.VIn = analogRead(VInPin);
 
-	JSPkt.DrvJSX = (analogRead(DrvJSXPin) - 2048) / 4;
-	JSPkt.DrvJSY = (analogRead(DrvJSYPin) - 2048) / 4;
-	JSPkt.PTJSX = (analogRead(PTJSXPin) - 2048) / 4;
-	JSPkt.PTJSY = (analogRead(PTJSYPin) - 2048) / 4;
+	//JSPkt.DrvJSX = (analogRead(DrvJSXPin) - 2048) / 4;
+	//JSPkt.DrvJSY = (analogRead(DrvJSYPin) - 2048) / 4;
+	//JSPkt.PTJSX = (analogRead(PTJSXPin) - 2048) / 4;
+	//JSPkt.PTJSY = (analogRead(PTJSYPin) - 2048) / 4;
+
+	JSPkt.DrvJSX = DrvJoystick.getHorizontal() - 512;
+	delay(1);
+	JSPkt.DrvJSY = DrvJoystick.getVertical() - 512;
+	delay(1);
+	JSPkt.PTJSX = PTJoystick.getHorizontal() - 512;
+	delay(1);
+	JSPkt.PTJSY = PTJoystick.getVertical() - 512;
+	delay(1);
 
 	if (TrellisKeypad.KeyPressed())
 	{
@@ -173,11 +190,11 @@ void ReadAndUpdateControlsCallback()
 		case JSBKeypadClass::I2CKey:
 			// Execute I2C bus scan
 			I2CBus.Scan();
-			// DEBUG Show I2C devices found in serial monitor
-			for (uint8_t i = 0x00; i < I2CBus.I2CDeviceCount; ++i)
-			{
-				_PLH(I2CBus.ActiveI2CDeviceAddresses[i]);
-			}
+			//// DEBUG Show I2C devices found in serial monitor
+			//for (uint8_t i = 0x00; i < I2CBus.I2CDeviceCount; ++i)
+			//{
+			//	_PLH(I2CBus.ActiveI2CDeviceAddresses[i]);
+			//}
 			// Display I2C page on LocalDisplay
 			JSBLocalDisplay.Control(JSBLocalDisplayClass::I2CPage);
 			TrellisKeypad.ClearAllKeyLEDs();

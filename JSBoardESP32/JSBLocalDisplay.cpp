@@ -9,6 +9,19 @@
 #include "I2CBus.h"
 #include "JSBLocalDisplay.h"
 
+void JSBLocalDisplayClass::DrawPageHeaderAndFooter()
+{
+	display.clearDisplay();
+	display.setCursor(0, 0);
+	display.cp437();
+	display.setTextSize(1);
+	display.write(PageTitles[currentPage]);
+
+	display.setCursor(0, 56);
+	display.write(PageMenus[currentPage]);
+
+}
+
 void JSBLocalDisplayClass::DrawSYSPage()
 {
 	currentPage = SYS;
@@ -16,11 +29,7 @@ void JSBLocalDisplayClass::DrawSYSPage()
 	if (lastPage != currentPage)
 	{
 		// Clear display and redraw static elements of the page format:
-		display.clearDisplay();
-		display.setCursor(0, 0);
-		display.cp437();
-		display.setTextSize(1);
-		display.write(PageTitles[SYS]);
+		DrawPageHeaderAndFooter();
 
 		display.setCursor(0, 40);
 		display.write("HWS:");
@@ -36,9 +45,6 @@ void JSBLocalDisplayClass::DrawSYSPage()
 			I2CBus.ActiveI2CDeviceAddresses[5]);
 		display.write(buf);
 
-		display.setCursor(0, 56);
-		display.write(PageMenus[SYS]);
-
 		lastPage = currentPage;
 	}
 	
@@ -53,7 +59,7 @@ void JSBLocalDisplayClass::DrawSYSPage()
 	display.write(buf);
 
 	display.fillRect(0, 32, 128, 8, SSD1306_BLACK);
-	snprintf(buf, 22, "KP %05d", JSPkt.RD4x4KPRaw);
+	snprintf(buf, 22, "KP %05d", JSPkt.VIn);
 	display.setCursor(0, 32);
 	display.write(buf);
 
@@ -66,19 +72,12 @@ void JSBLocalDisplayClass::DrawPOWPage()
 	if (lastPage != POW)
 	{
 		// Clear display and redraw static elements of the page format:
-		display.clearDisplay();
-		display.cp437();
-		display.setTextSize(1);
-		display.setCursor(0, 0);
-		display.write(PageTitles[POW]);
+		DrawPageHeaderAndFooter();
 
 		display.setCursor(0, 16);
 		display.write("Vraw");
 		display.setCursor(0, 24);
 		display.write("5V Reg OFF/ENA");
-
-		display.setCursor(0, 56);
-		display.write(PageMenus[POW]);
 
 		lastPage = currentPage;
 	}
@@ -94,20 +93,13 @@ void JSBLocalDisplayClass::DrawCOMPage()
 	if (lastPage != currentPage)
 	{
 		// Clear display and redraw static elements of the page format:
-		display.clearDisplay();
-		display.setCursor(0, 0);
-		display.cp437();
-		display.setTextSize(1);
-		display.write(PageTitles[COM]);
+		DrawPageHeaderAndFooter();
 
 		display.setCursor(0, 40);
 
 		display.setCursor(64, 40);
 
 		display.setCursor(0, 48);
-
-		display.setCursor(0, 56);
-		display.write(PageMenus[COM]);
 
 		lastPage = currentPage;
 	}
@@ -124,11 +116,7 @@ void JSBLocalDisplayClass::DrawI2CPage()
 	if (lastPage != currentPage)
 	{
 		// Clear display and redraw static elements of the page format:
-		display.clearDisplay();
-		display.setCursor(0, 0);
-		display.cp437();
-		display.setTextSize(1);
-		display.write(PageTitles[I2C]);
+		DrawPageHeaderAndFooter();
 
 		display.setCursor(0, 40);
 
@@ -143,9 +131,6 @@ void JSBLocalDisplayClass::DrawI2CPage()
 			I2CBus.ActiveI2CDeviceAddresses[4],
 			I2CBus.ActiveI2CDeviceAddresses[5]);
 		display.write(buf);
-
-		display.setCursor(0, 56);
-		display.write(PageMenus[I2C]);
 
 		lastPage = currentPage;
 	}

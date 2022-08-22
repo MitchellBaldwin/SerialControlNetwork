@@ -12,7 +12,7 @@ JSPktClass::JSPktClass()
 	DrvJSY = 2048;
 	PTJSX = 2048;
 	PTJSY = 2048;
-	RD4x4KPRaw = 0x0000;
+	VIn = 0x0000;
 	ButtonStates = 0x0000;
 }
 
