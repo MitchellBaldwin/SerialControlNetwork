@@ -20,20 +20,24 @@ void JSBLocalDisplayClass::DrawSYSPage()
 		display.setCursor(0, 0);
 		display.cp437();
 		display.setTextSize(1);
-		memcpy(buf, sysPageTitle, sizeof(sysPageTitle));
-		display.write(buf);
+		display.write(PageTitles[SYS]);
 
 		display.setCursor(0, 40);
 		display.write("HWS:");
 		display.setCursor(64, 40);
 		display.write("SWS:");
 		display.setCursor(0, 48);
-		snprintf(buf, 22, "I2C %02X %02X %02X", I2CBus.ActiveI2CDeviceAddresses[0], I2CBus.ActiveI2CDeviceAddresses[1], I2CBus.ActiveI2CDeviceAddresses[2]);
+		snprintf(buf, 22, "I2C %02X %02X %02X %02X %02X %02X",
+			I2CBus.ActiveI2CDeviceAddresses[0],
+			I2CBus.ActiveI2CDeviceAddresses[1],
+			I2CBus.ActiveI2CDeviceAddresses[2],
+			I2CBus.ActiveI2CDeviceAddresses[3],
+			I2CBus.ActiveI2CDeviceAddresses[4],
+			I2CBus.ActiveI2CDeviceAddresses[5]);
 		display.write(buf);
 
 		display.setCursor(0, 56);
-		memcpy(buf, sysPageMenu, sizeof(sysPageMenu));
-		display.write(buf);
+		display.write(PageMenus[SYS]);
 
 		lastPage = currentPage;
 	}
@@ -66,8 +70,7 @@ void JSBLocalDisplayClass::DrawPOWPage()
 		display.cp437();
 		display.setTextSize(1);
 		display.setCursor(0, 0);
-		memcpy(buf, powPageTitle, sizeof(powPageTitle));
-		display.write(buf);
+		display.write(PageTitles[POW]);
 
 		display.setCursor(0, 16);
 		display.write("Vraw");
@@ -75,8 +78,7 @@ void JSBLocalDisplayClass::DrawPOWPage()
 		display.write("5V Reg OFF/ENA");
 
 		display.setCursor(0, 56);
-		memcpy(buf, powPageMenu, sizeof(powPageMenu));
-		display.write(buf);
+		display.write(PageMenus[POW]);
 
 		lastPage = currentPage;
 	}
@@ -87,6 +89,32 @@ void JSBLocalDisplayClass::DrawPOWPage()
 
 void JSBLocalDisplayClass::DrawCOMPage()
 {
+	currentPage = COM;
+
+	if (lastPage != currentPage)
+	{
+		// Clear display and redraw static elements of the page format:
+		display.clearDisplay();
+		display.setCursor(0, 0);
+		display.cp437();
+		display.setTextSize(1);
+		display.write(PageTitles[COM]);
+
+		display.setCursor(0, 40);
+
+		display.setCursor(64, 40);
+
+		display.setCursor(0, 48);
+
+		display.setCursor(0, 56);
+		display.write(PageMenus[COM]);
+
+		lastPage = currentPage;
+	}
+
+	// Update dynamic displays:
+
+	display.display();
 }
 
 void JSBLocalDisplayClass::DrawI2CPage()
@@ -100,26 +128,29 @@ void JSBLocalDisplayClass::DrawI2CPage()
 		display.setCursor(0, 0);
 		display.cp437();
 		display.setTextSize(1);
-		memcpy(buf, i2cPageTitle, sizeof(i2cPageTitle));
-		display.write(buf);
+		display.write(PageTitles[I2C]);
 
 		display.setCursor(0, 40);
 
 		display.setCursor(64, 40);
 
 		display.setCursor(0, 48);
-		snprintf(buf, 22, "I2C %02X %02X %02X %02X", I2CBus.ActiveI2CDeviceAddresses[0], I2CBus.ActiveI2CDeviceAddresses[1], I2CBus.ActiveI2CDeviceAddresses[2], I2CBus.ActiveI2CDeviceAddresses[3]);
+		snprintf(buf, 22, "I2C %02X %02X %02X %02X %02X %02X",
+			I2CBus.ActiveI2CDeviceAddresses[0],
+			I2CBus.ActiveI2CDeviceAddresses[1],
+			I2CBus.ActiveI2CDeviceAddresses[2],
+			I2CBus.ActiveI2CDeviceAddresses[3],
+			I2CBus.ActiveI2CDeviceAddresses[4],
+			I2CBus.ActiveI2CDeviceAddresses[5]);
 		display.write(buf);
 
 		display.setCursor(0, 56);
-		memcpy(buf, i2cPageMenu, sizeof(i2cPageMenu));
-		display.write(buf);
+		display.write(PageMenus[I2C]);
 
 		lastPage = currentPage;
 	}
 
 	// Update dynamic displays:
-
 
 	display.display();
 }
