@@ -43,7 +43,7 @@
 #endif
 
 constexpr auto BuiltinLEDTogglePeriod = 500;
-constexpr auto ControlsUpdatePeriod = 100;
+constexpr auto ControlsUpdatePeriod = 20;
 
 // Scheduler
 Scheduler mainScheduler;
@@ -147,21 +147,39 @@ void ToggleBuiltinLEDCallback()
 
 void ReadAndUpdateControlsCallback()
 {
-	JSPkt.VIn = analogRead(VInPin);
+	if (JSPkt.currentAnalogChannel >= JSPktClass::LastChannel)
+	{
+		JSPkt.currentAnalogChannel = JSPktClass::DrvJSXChannel;
+	}
+	else
+	{
+		JSPkt.currentAnalogChannel = JSPktClass::analogChannels(JSPkt.currentAnalogChannel + 1);
+	}
+	
+	switch (JSPkt.currentAnalogChannel)
+	{
+	case JSPktClass::DrvJSXChannel:
+		JSPkt.DrvJSX = DrvJoystick.getHorizontal() - 512;
+		break;
+	case JSPktClass::DrvJSYChannel:
+		JSPkt.DrvJSY = DrvJoystick.getVertical() - 512;
+		break;
+	case JSPktClass::PTJSXChannel:
+		JSPkt.PTJSX = PTJoystick.getHorizontal() - 512;
+		break;
+	case JSPktClass::PTJSYChannel:
+		JSPkt.PTJSY = PTJoystick.getVertical() - 512;
+		break;
+	case JSPktClass::VInChannel:
+		JSPkt.VIn = analogRead(VInPin);
+		break;
+	case JSPktClass::AnalogKeypadChannel:
+		break;
 
-	//JSPkt.DrvJSX = (analogRead(DrvJSXPin) - 2048) / 4;
-	//JSPkt.DrvJSY = (analogRead(DrvJSYPin) - 2048) / 4;
-	//JSPkt.PTJSX = (analogRead(PTJSXPin) - 2048) / 4;
-	//JSPkt.PTJSY = (analogRead(PTJSYPin) - 2048) / 4;
-
-	JSPkt.DrvJSX = DrvJoystick.getHorizontal() - 512;
-	delay(1);
-	JSPkt.DrvJSY = DrvJoystick.getVertical() - 512;
-	delay(1);
-	JSPkt.PTJSX = PTJoystick.getHorizontal() - 512;
-	delay(1);
-	JSPkt.PTJSY = PTJoystick.getVertical() - 512;
-	delay(1);
+	default:
+		break;
+	}
+	
 
 	if (TrellisKeypad.KeyPressed())
 	{

@@ -32,6 +32,18 @@ class JSPktClass
 	 int16_t VIn;
 	 uint16_t ButtonStates;
 
+	 enum analogChannels
+	 {
+		 DrvJSXChannel,
+		 DrvJSYChannel,
+		 PTJSXChannel,
+		 PTJSYChannel,
+		 VInChannel,
+		 AnalogKeypadChannel,
+
+		 LastChannel
+	 };
+	 analogChannels currentAnalogChannel = LastChannel;
 
 	 JSPktClass();		// Default constructor
 };
